@@ -1,6 +1,5 @@
 # Chatbot-Called-Kanban
 C Assignment Team Project 2 for ICT1002 Programming Fundamentals
-C project for ICT1002
 
 ### Prerequisites
 
