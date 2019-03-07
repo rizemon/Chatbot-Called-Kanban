@@ -43,6 +43,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "chat1002.h"
+#include "linkedlist.h"
+#include "hashtable.h"
+#include "knowledgebase.h"
  
  
 /*

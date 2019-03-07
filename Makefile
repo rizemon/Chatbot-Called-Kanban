@@ -42,17 +42,35 @@ X        =
 #
 ###############################################################################
 
-chat1002$(X): chatbot$(O) knowledge$(O) main$(O)
+all: chat1002$(X) playground$(X)
+
+chat1002$(X): chatbot$(O) knowledge$(O) main$(O) knowledgebase$(O) hashtable$(O) linkedlist$(O)
 	$(LD) $(LDFLAGS)chat1002$(X) chatbot$(O) knowledge$(O) main$(O) $(LDLIBS)
 
-chatbot$(O): chatbot.c chat1002.h
+chatbot$(O): chatbot.c chat1002.h knowledgebase$(O) hashtable$(O) linkedlist$(O)
 	$(CC) $(CFLAGS) chatbot$(O) chatbot.c
 
-knowledge$(O): knowledge.c chat1002.h
+knowledge$(O): knowledge.c chat1002.h knowledgebase$(O) hashtable$(O) linkedlist$(O)
 	$(CC) $(CFLAGS) knowledge$(O) knowledge.c
 	
-main$(O): main.c chat1002.h
+main$(O): main.c chat1002.h knowledgebase$(O) hashtable$(O) linkedlist$(O)
 	$(CC) $(CFLAGS) main$(O) main.c
+
+#
+#	Linked list, Hash table, Knowledge Base implementation
+#
+
+playground$(X): playground.c knowledgebase$(O) hashtable$(O) linkedlist$(O)
+	$(LD) $(LDFLAGS) playground$(X) knowledgebase$(O) hashtable$(O) linkedlist$(O) playground.c $(LDLIBS)	
+
+linkedlist$(O): linkedlist.c linkedlist.h
+	$(CC) $(CFLAGS) linkedlist$(O) linkedlist.c
+
+hashtable$(O): hashtable.c hashtable.h linkedlist$(O)
+	$(CC) $(CFLAGS) hashtable$(O) hashtable.c linkedlist$(O)
+
+knowledgebase$(O): knowledgebase.c knowledgebase.h hashtable$(O) linkedlist$(O)
+	$(CC) $(CFLAGS) knowledgebase$(O) knowledgebase.c hashtable$(O) linkedlist$(O)
 	
 clean:
 	$(RM) *$(O)

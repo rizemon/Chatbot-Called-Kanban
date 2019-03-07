@@ -25,3 +25,15 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 * Jesus
 
+## How to test out linkedlist.h, hashtable.h, knowledgebase.h
+
+1. Write your code in playground.c
+2. Run Makefile
+```shell
+make
+```
+3. Run playground
+```shell
+./playground
+```
+
