@@ -7,7 +7,7 @@ unsigned long hash_fn(char * str);
 
 Node ** createHashTable();
 Node * findHashTable(Node ** hashTable, char * key);
-Node ** insertHashTable(Node ** hashTable, char * key, char * content);
+Node ** insertHashTable(Node ** hashTable, Node * node);
 Node ** deleteHashTable(Node ** hashTable, char * key);
 Node ** clearHashTable(Node ** hashTable);
 

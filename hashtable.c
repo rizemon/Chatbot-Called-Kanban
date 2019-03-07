@@ -23,25 +23,33 @@ Node ** createHashTable(){
 }
 
 Node * findHashTable(Node ** hashTable, char * key){
+    if(hashTable == NULL) return NULL;
     //Calculate hash
     unsigned long hash = hash_fn(key) % BUCKET_SIZE;
     //Retrieve node from linked list
     return findNode(hashTable[hash], key);
 }
 
-Node ** insertHashTable(Node ** hashTable, char * key, char * content){
+Node ** insertHashTable(Node ** hashTable, Node * node){
+    if(hashTable == NULL) return NULL;
+    if(node == NULL) return hashTable;
     //Calculate hash
-    unsigned long hash = hash_fn(key) % BUCKET_SIZE;
+    unsigned long hash = hash_fn(node->key) % BUCKET_SIZE;
     //Retrieve node from linked list
-    Node * found = findNode(hashTable[hash], key);
+    Node * found = findNode(hashTable[hash], node->key);
     //If exist, update content of node
-    if(found) found = modifyNode(found, content);
+    if(found){
+        found = modifyNode(found, node->content);
+        //Free the node
+        free(node);
+    } 
     //If not, add node to linked list
-    else hashTable[hash] = addNode(hashTable[hash], createNode(key, content));
+    else hashTable[hash] = addNode(hashTable[hash], node);
     return hashTable;
 }
 
 Node ** deleteHashTable(Node ** hashTable, char * key){
+    if(hashTable == NULL) return NULL;
     //Calculate hash
     unsigned long hash = hash_fn(key) % BUCKET_SIZE;
     //Delete node from linked list
@@ -50,7 +58,7 @@ Node ** deleteHashTable(Node ** hashTable, char * key){
 }
 
 Node ** clearHashTable(Node ** hashTable){
-
+    if(hashTable == NULL) return NULL;
     //Loop through each slot
     int i;
     for(i=0; i < BUCKET_SIZE; i++){

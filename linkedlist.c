@@ -18,6 +18,7 @@ Node * createNode(char * key, char * content){
 Node * addNode(Node * headptr, Node * newNode){
     //If linked list is empty, return the new node
     if(headptr == NULL) return newNode;
+    if(newNode == NULL) return headptr;
     //Set new node to point to the current head node
     newNode->next = headptr;
     //Set new node to be the new head node
@@ -25,6 +26,7 @@ Node * addNode(Node * headptr, Node * newNode){
 }
 
 Node * modifyNode(Node * node, char * content){
+    if(node == NULL) return NULL;
     //Overwrite content in node
     if(node) strncpy(node-> content, content, MAX_SIZE);
     return node;
