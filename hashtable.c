@@ -41,7 +41,7 @@ Node ** insertHashTable(Node ** hashTable, Node * node){
     if(found){
         found = modifyNode(found, node->content);
         //Free the node
-        free(node);
+        freeNode(node);
     } 
     //If not, add node to linked list
     else hashTable[hash] = addNode(hashTable[hash], node);
