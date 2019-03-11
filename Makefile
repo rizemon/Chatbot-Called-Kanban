@@ -61,7 +61,7 @@ main$(O): main.c chat1002.h knowledgebase$(O) hashtable$(O) linkedlist$(O)
 #
 
 playground$(X): playground.c knowledgebase$(O) hashtable$(O) linkedlist$(O)
-	$(LD) $(LDFLAGS) playground$(X) knowledgebase$(O) hashtable$(O) linkedlist$(O) playground.c $(LDLIBS)	
+	$(LD) $(LDFLAGS)playground$(X) knowledgebase$(O) hashtable$(O) linkedlist$(O) playground.c $(LDLIBS)	
 
 linkedlist$(O): linkedlist.c linkedlist.h
 	$(CC) $(CFLAGS) linkedlist$(O) linkedlist.c

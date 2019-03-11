@@ -82,8 +82,10 @@ Node * clearAll(Node * headptr){
     //No more nodes to free
     if(headptr==NULL) return NULL;
     //Free from the back 
-    if(headptr->next == NULL) freeNode(headptr);
-    else return clearAll(headptr->next);
+    clearAll(headptr->next);
+    freeNode(headptr);
+    printf("hi");
+    return NULL;
 }
 
 void getNodeKey(Node * node, char * key){
