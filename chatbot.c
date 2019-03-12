@@ -47,7 +47,6 @@
 #include "hashtable.h"
 #include "knowledgebase.h"
  
- 
 /*
  * Get the name of the chatbot.
  *
@@ -55,7 +54,7 @@
  */
 const char *chatbot_botname() {
 
-	return "Chatbot";
+	return "Alexa";
 	
 }
 
@@ -83,13 +82,6 @@ const char *chatbot_username() {
  *   1, if the chatbot should stop (i.e. it detected the EXIT intent)
  */
 int chatbot_main(int inc, char *inv[], char *response, int n) {
-	
-	/* check for empty input */
-	if (inc < 1) {
-		snprintf(response, n, "");
-		return 0;
-	}
-
 	/* look for an intent and invoke the corresponding do_* function */
 	if (chatbot_is_exit(inv[0]))
 		return chatbot_do_exit(inc, inv, response, n);
@@ -159,8 +151,7 @@ int chatbot_do_exit(int inc, char *inv[], char *response, int n) {
 int chatbot_is_load(const char *intent) {
 	
 	/* to be implemented */
-	
-	return 0;
+	return compare_token(intent, "load") == 0;
 	
 }
 
@@ -177,7 +168,13 @@ int chatbot_is_load(const char *intent) {
 int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 	
 	/* to be implemented */
-	 
+	/*printf("Response: %c\n", response);
+	printf("Inc: %d\n", inc);
+	printf("N: %d\n", n);
+	for(int i=0; i<strlen(inv); i++){
+			printf("inv[]: %s\n",inv[i]);
+	}
+	knowledge_read(inv[1]);*/
 	return 0;
 	 
 }
@@ -195,9 +192,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_question(const char *intent) {
 	
-	/* to be implemented */
-	
-	return 0;
+	return compare_token(intent, "what") == 0 || compare_token(intent, "where") == 0 || compare_token(intent, "who") == 0;
 	
 }
 
@@ -216,11 +211,17 @@ int chatbot_is_question(const char *intent) {
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
-	
-	/* to be implemented */
-	 
+	char buffer[MAX_RESPONSE];
+	Node * head = NULL;
+	char *intent = inv[0];
+
+	for(int i = inc; i >= 1; i--){
+		head = addNode(head, createNode("", inv[i]));
+	}
+
+	printAll(head);
+
 	return 0;
-	 
 }
 
 
@@ -236,9 +237,7 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_reset(const char *intent) {
 	
-	/* to be implemented */
-	
-	return 0;
+	return compare_token(intent, "reset") == 0;
 	
 }
 
@@ -250,7 +249,7 @@ int chatbot_is_reset(const char *intent) {
  * function is used.
  *
  * Returns:
- *   0 (the chatbot always continues chatting after beign reset)
+ *   0 (the chatbot always continues chatting after benign reset)
  */
 int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
 	
@@ -273,9 +272,8 @@ int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_save(const char *intent) {
 	
-	/* to be implemented */
 	
-	return 0;
+	return compare_token(intent, "save") == 0;
 	
 }
 

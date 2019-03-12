@@ -37,7 +37,10 @@
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
 	
 	/* to be implemented */
-	
+	if(strcmp(intent, "what") == 0){
+		snprintf(response, n, "What \"%s\"?", entity);
+	}
+
 	return KB_NOTFOUND;
 	
 }
@@ -78,13 +81,13 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 int knowledge_read(FILE *f) {
 	
 	/* to be implemented */
-	
+	/*printf("Loaded %s", f);*/
 	return 0;
 }
 
 
 /*
- * Reset the knowledge base, removing all know entitities from all intents.
+ * Reset the knowledge base, removing all know entities from all intents.
  */
 void knowledge_reset() {
 	
