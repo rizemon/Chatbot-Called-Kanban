@@ -48,20 +48,20 @@ chat1002$(X): chatbot$(O) knowledge$(O) main$(O) knowledgebase$(O) hashtable$(O)
 	$(LD) $(LDFLAGS)chat1002$(X) chatbot$(O) knowledge$(O) main$(O) knowledgebase$(O) hashtable$(O) linkedlist$(O) $(LDLIBS)
 
 chatbot$(O): chatbot.c chat1002.h knowledgebase$(O) hashtable$(O) linkedlist$(O)
-	$(CC) $(CFLAGS) chatbot$(O) chatbot.c
+	$(CC) $(CFLAGS) chatbot$(O) chatbot.c knowledgebase$(O) hashtable$(O) linkedlist$(O)
 
 knowledge$(O): knowledge.c chat1002.h knowledgebase$(O) hashtable$(O) linkedlist$(O)
-	$(CC) $(CFLAGS) knowledge$(O) knowledge.c
+	$(CC) $(CFLAGS) knowledge$(O) knowledge.c knowledgebase$(O) hashtable$(O) linkedlist$(O)
 	
 main$(O): main.c chat1002.h knowledgebase$(O) hashtable$(O) linkedlist$(O)
-	$(CC) $(CFLAGS) main$(O) main.c
+	$(CC) $(CFLAGS) main$(O) main.c knowledgebase$(O) hashtable$(O) linkedlist$(O)
 
 #
 #	Linked list, Hash table, Knowledge Base implementation
 #
 
 playground$(X): playground.c knowledgebase$(O) hashtable$(O) linkedlist$(O)
-	$(LD) $(LDFLAGS) playground$(X) knowledgebase$(O) hashtable$(O) linkedlist$(O) playground.c $(LDLIBS)	
+	$(LD) $(LDFLAGS)playground$(X) knowledgebase$(O) hashtable$(O) linkedlist$(O) playground.c $(LDLIBS)	
 
 linkedlist$(O): linkedlist.c linkedlist.h
 	$(CC) $(CFLAGS) linkedlist$(O) linkedlist.c
