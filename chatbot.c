@@ -46,8 +46,10 @@
 #include "linkedlist.h"
 #include "hashtable.h"
 #include "knowledgebase.h"
- 
- 
+
+/** Global Variable for head of linkedlist node containing all the smalltalk phrases*/
+Node * smalltalks = NULL;
+
 /*
  * Get the name of the chatbot.
  *
@@ -83,7 +85,8 @@ const char *chatbot_username() {
  *   1, if the chatbot should stop (i.e. it detected the EXIT intent)
  */
 int chatbot_main(int inc, char *inv[], char *response, int n) {
-	
+    /** Creates smalltalk linked list */
+    smalltalk();
 	/* check for empty input */
 	if (inc < 1) {
 		snprintf(response, n, "");
@@ -93,8 +96,8 @@ int chatbot_main(int inc, char *inv[], char *response, int n) {
 	/* look for an intent and invoke the corresponding do_* function */
 	if (chatbot_is_exit(inv[0]))
 		return chatbot_do_exit(inc, inv, response, n);
-	else if (chatbot_is_smalltalk(inv[0]))
-		return chatbot_do_smalltalk(inc, inv, response, n);
+	else if (chatbot_is_smalltalk(inv[0], smalltalks))
+		return chatbot_do_smalltalk(inc, inv, response, n, smalltalks);
 	else if (chatbot_is_load(inv[0]))
 		return chatbot_do_load(inc, inv, response, n);
 	else if (chatbot_is_question(inv[0]))
@@ -296,7 +299,21 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 	return 0;
 	 
 }
- 
+
+/** This function creates a linked list filled with smalltalk nodes to store key pair values of small talk, and
+    This functions modifies the values of the global variable smalltalks so it points correctly to the next node to the smalltalk linked list
+    As smalltalk is the head of the linked list, to get all the smalltalk phrases, just reference the smalltalk variable*/
+void smalltalk(){
+    smalltalks = createNode("bye", "bye");
+    Node * smalltalk2 = createNode("hi", "hello");
+    Node * smalltalk3 = createNode("hey", "hello");
+    Node * smalltalk4 = createNode("sup", "whatsup");
+    Node * smalltalk5 = createNode("hie", "hey");
+    addNode(smalltalk2, smalltalks);
+    addNode(smalltalk3, smalltalk2);
+    addNode(smalltalk4, smalltalk3);
+    addNode(smalltalk5, smalltalk4);
+}
  
 /*
  * Determine which an intent is smalltalk.
@@ -309,11 +326,14 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
  *  1, if the intent is the first word of one of the smalltalk phrases
  *  0, otherwise
  */
-int chatbot_is_smalltalk(const char *intent) {
-	
-	/* to be implemented */
-	
-	return 0;
+int chatbot_is_smalltalk(const char *intent, Node * smalltalks) {    
+    /** If intent matches key inside linkedlist smalltalk, return 1, otherwise, return 0 */
+    if (findNode(smalltalks, intent) != NULL){
+        return 1;
+    }
+    else{
+        return 0;
+    }
  
 }
 
@@ -328,11 +348,9 @@ int chatbot_is_smalltalk(const char *intent) {
  *   0, if the chatbot should continue chatting
  *   1, if the chatbot should stop chatting (e.g. the smalltalk was "goodbye" etc.)
  */
-int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
-	
-	/* to be implemented */
-	
-	return 0;
-	
+int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n, Node * smalltalks) {
+    
+    snprintf(response, n, "chatbot_is_smalltalk is working" );
+    return 0;
 }
   
