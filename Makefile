@@ -45,7 +45,7 @@ X        =
 all: chat1002$(X) playground$(X)
 
 chat1002$(X): chatbot$(O) knowledge$(O) main$(O) knowledgebase$(O) hashtable$(O) linkedlist$(O)
-	$(LD) $(LDFLAGS)chat1002$(X) chatbot$(O) knowledge$(O) main$(O) $(LDLIBS)
+	$(LD) $(LDFLAGS)chat1002$(X) chatbot$(O) knowledge$(O) main$(O) knowledgebase$(O) hashtable$(O) linkedlist$(O) $(LDLIBS)
 
 chatbot$(O): chatbot.c chat1002.h knowledgebase$(O) hashtable$(O) linkedlist$(O)
 	$(CC) $(CFLAGS) chatbot$(O) chatbot.c knowledgebase$(O) hashtable$(O) linkedlist$(O)
