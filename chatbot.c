@@ -82,6 +82,14 @@ const char *chatbot_username() {
  *   1, if the chatbot should stop (i.e. it detected the EXIT intent)
  */
 int chatbot_main(int inc, char *inv[], char *response, int n) {
+	
+	/* check for empty input */
+	if (inc < 1) {
+		snprintf(response, n, "");
+		return 0;
+	}
+
+
 	/* look for an intent and invoke the corresponding do_* function */
 	if (chatbot_is_exit(inv[0]))
 		return chatbot_do_exit(inc, inv, response, n);
