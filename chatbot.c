@@ -158,7 +158,7 @@ int chatbot_do_exit(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_load(const char *intent) {
 	
-	/* to be implemented */
+	/*When user types in load(case-insensitive) */
 	return compare_token(intent, "load") == 0;
 	
 }
@@ -175,7 +175,7 @@ int chatbot_is_load(const char *intent) {
  */
 int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 	
-	/* to be implemented */
+	/* did halfway and realised do later - william */
 	/*printf("Response: %c\n", response);
 	printf("Inc: %d\n", inc);
 	printf("N: %d\n", n);
@@ -200,6 +200,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_question(const char *intent) {
 	
+	/*When user types in what,where or who(case-insensitive) */
 	return compare_token(intent, "what") == 0 || compare_token(intent, "where") == 0 || compare_token(intent, "who") == 0;
 	
 }
@@ -219,7 +220,10 @@ int chatbot_is_question(const char *intent) {
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
-	char buffer[MAX_RESPONSE];
+	/*Grabs user input and stores into a linked-list. 
+	Removing the first word (what,where,how). 
+	TODO: ignoring the "is/are" and adding the rest to the linked list
+	ie "What is the temprature" adds only "the temperature"*/
 	Node * head = NULL;
 	char *intent = inv[0];
 
@@ -245,6 +249,7 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_reset(const char *intent) {
 	
+	/*When user types in reset(case-insensitive) */
 	return compare_token(intent, "reset") == 0;
 	
 }
@@ -280,7 +285,8 @@ int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_save(const char *intent) {
 	
-	
+	/*When user types in reset(case-insensitive) */
+
 	return compare_token(intent, "save") == 0;
 	
 }
