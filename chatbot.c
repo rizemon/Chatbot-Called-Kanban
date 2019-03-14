@@ -226,7 +226,7 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	char *entity = malloc(inc);
 	int counter =0;
 	for(int i =1; i<inc; i++){
-		if(compare_token(inv[i], "is") != 0){
+		if(compare_token(inv[i], "is") != 0 || compare_token(inv[i], "are") != 0 ){
 			if(counter == 0){
 				strcpy(entity, inv[i]);
 				strcat(entity, " ");
