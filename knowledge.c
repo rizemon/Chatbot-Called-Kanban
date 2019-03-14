@@ -37,9 +37,6 @@
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
 	
 	/* to be implemented */
-	if(strcmp(intent, "what") == 0){
-		snprintf(response, n, "What \"%s\"?", entity);
-	}
 
 	return KB_NOTFOUND;
 	

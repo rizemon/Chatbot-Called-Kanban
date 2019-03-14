@@ -221,17 +221,25 @@ int chatbot_is_question(const char *intent) {
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	/*Grabs user input and stores into a linked-list. 
-	Removing the first word (what,where,how). 
-	TODO: ignoring the "is/are" and adding the rest to the linked list
-	ie "What is the temprature" adds only "the temperature"*/
-	Node * head = NULL;
+	Removing the first word (what,where,how). */
 	char *intent = inv[0];
-
-	for(int i = inc; i >= 1; i--){
-		head = addNode(head, createNode("", inv[i]));
+	char *entity = malloc(inc);
+	int counter =0;
+	for(int i =1; i<inc; i++){
+		if(compare_token(inv[i], "is") != 0){
+			if(counter == 0){
+				strcpy(entity, inv[i]);
+				strcat(entity, " ");
+			}else{
+				strcat(entity,inv[i]);
+				strcat(entity," ");
+			}
+			counter++;
+		}
 	}
 
-	printAll(head);
+	/*knowledge_get here*/
+	knowledge_get(intent, entity, response, n);
 
 	return 0;
 }
