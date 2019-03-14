@@ -221,7 +221,8 @@ int chatbot_is_question(const char *intent) {
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	/*Grabs user input and stores into a linked-list. 
-	Removing the first word (what,where,how). */
+	Removing the first word (what,where,how). 
+	Todo:FIX WHERE*/
 	char *intent = inv[0];
 	char *entity = malloc(inc);
 	int counter =0;
