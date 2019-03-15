@@ -84,7 +84,6 @@ Node * clearAll(Node * headptr){
     //Free from the back 
     clearAll(headptr->next);
     freeNode(headptr);
-    printf("hi");
     return NULL;
 }
 

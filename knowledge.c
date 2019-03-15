@@ -20,6 +20,7 @@
 #include "hashtable.h"
 #include "knowledgebase.h"
 
+
 /*
  * Get the response to a question.
  *
@@ -35,11 +36,17 @@
  *   KB_INVALID, if 'intent' is not a recognised question word
  */
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
+	if (!(compare_token(intent, "what") || compare_token(intent, "who") || compare_token(intent, "where"))){
+		return KB_INVALID;
+	}
 	
-	/* to be implemented */
-	
-	return KB_NOTFOUND;
-	
+	Node * found = searchKnowledgeBase(kb, intent, entity);
+	 if(found == NULL){
+        return KB_NOTFOUND;
+    }else{
+		getNodeContent(found, response);
+        return KB_OK;
+    }
 }
 
 
@@ -88,7 +95,7 @@ int knowledge_read(FILE *f) {
  */
 void knowledge_reset() {
 	
-	/* to be implemented */
+	kb = clearKnowledgeBase(kb);
 	
 }
 

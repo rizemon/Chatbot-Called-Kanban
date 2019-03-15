@@ -4,14 +4,14 @@
 #include <string.h>
 #include "hashtable.h"
 
+#ifndef KNOWLEDGEBASE_H
+#define KNOWLEDGEBASE_H
+
 typedef struct KnowledgeBaseStruct {
     Node ** whereDict;
     Node ** whatDict;
     Node ** whoDict;
 }KnowledgeBase;
-
-#ifndef KNOWLEDGEBASE_H
-#define KNOWLEDGEBASE_H
 
 KnowledgeBase * createKnowledgeBase();
 Node * searchKnowledgeBase(KnowledgeBase * kb, char * intent, char * entity);

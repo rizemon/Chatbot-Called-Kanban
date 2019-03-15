@@ -46,7 +46,8 @@
 #include "linkedlist.h"
 #include "hashtable.h"
 #include "knowledgebase.h"
- 
+
+KnowledgeBase * kb = NULL;
  
 /*
  * Get the name of the chatbot.
@@ -89,7 +90,9 @@ int chatbot_main(int inc, char *inv[], char *response, int n) {
 		snprintf(response, n, "");
 		return 0;
 	}
-
+	if (kb == NULL){
+		kb = createKnowledgeBase();
+	}
 	/* look for an intent and invoke the corresponding do_* function */
 	if (chatbot_is_exit(inv[0]))
 		return chatbot_do_exit(inc, inv, response, n);
@@ -218,7 +221,7 @@ int chatbot_is_question(const char *intent) {
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	
 	/* to be implemented */
-	 
+
 	return 0;
 	 
 }
@@ -254,8 +257,12 @@ int chatbot_is_reset(const char *intent) {
  */
 int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
 	
-	/* to be implemented */
-	 
+	knowledge_reset();
+	char buffer[MAX_RESPONSE];
+	strcpy(buffer, chatbot_botname());
+	strcat(buffer, " resetted");
+	snprintf(response, n, buffer);
+	
 	return 0;
 	 
 }

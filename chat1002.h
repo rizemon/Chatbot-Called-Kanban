@@ -9,6 +9,7 @@
 #define _CHAT1002_H
 
 #include <stdio.h>
+#include "knowledgebase.h"
 
 /* the maximum number of characters we expect in a line of input (including the terminating null)  */
 #define MAX_INPUT    256
@@ -56,4 +57,5 @@ void knowledge_reset();
 int knowledge_read(FILE *f);
 void knowledge_write(FILE *f);
 
+extern KnowledgeBase * kb;
 #endif
