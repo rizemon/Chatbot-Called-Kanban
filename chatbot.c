@@ -200,7 +200,7 @@ int chatbot_is_question(const char *intent) {
 	
 	/* to be implemented */
 	
-	return 0;
+	return 1;
 	
 }
 

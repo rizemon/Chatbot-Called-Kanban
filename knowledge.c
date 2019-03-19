@@ -67,10 +67,43 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
  */
 int knowledge_put(const char *intent, const char *entity, const char *response) {
 	
-	/* to be implemented */
-	
-	return KB_INVALID;
-	
+	if(compare_token(intent, "what")){
+		Node * newNode = createNode(entity, response);
+		if(newNode ==NULL){
+			return KB_NOMEM;
+		}
+		else
+		{
+			kb = insertKnowledgeBase(kb , "what", createNode(entity,response));
+			return KB_OK;
+		}
+		
+	}
+	else if (compare_token(intent, "where")){
+		Node * newNode = createNode(entity, response);
+		if(newNode ==NULL){
+			return KB_NOMEM;
+		}
+		else
+		{
+			kb = insertKnowledgeBase(kb , "where", createNode(entity,response));
+			return KB_OK;
+		}
+	}
+	else if (compare_token(intent, "who")){	
+		Node * newNode = createNode(entity, response);
+		if(newNode ==NULL){
+			return KB_NOMEM;
+		}
+		else
+		{
+			kb = insertKnowledgeBase(kb , "who", createNode(entity,response));
+			return KB_OK;
+		}
+	}
+	else{
+		return KB_INVALID;
+	}
 }
 
 
