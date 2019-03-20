@@ -37,6 +37,7 @@ int main(int argc, char *argv[]) {
 	/* print a welcome message */
 	printf("%s: Hello, I'm %s.\n", chatbot_botname(), chatbot_botname());
 	
+		
 	/* main command loop */
 	do {
 	

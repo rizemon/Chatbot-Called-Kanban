@@ -47,6 +47,10 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 		getNodeContent(found, response);
         return KB_OK;
     }
+	/* to be implemented */
+
+	return KB_NOTFOUND;
+	
 }
 
 
@@ -119,12 +123,14 @@ int knowledge_read(FILE *f) {
 	
 	/* to be implemented */
 	
+	/*printf("Loaded %s", f);*/
 	return 0;
 }
 
 
 /*
  * Reset the knowledge base, removing all know entitities from all intents.
+ * Reset the knowledge base, removing all know entities from all intents.
  */
 void knowledge_reset() {
 	
