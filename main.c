@@ -35,8 +35,8 @@ int main(int argc, char *argv[]) {
 	chatbot_do_reset(1, inv, output, MAX_RESPONSE);
 	
 	/* print a welcome message */
-	printf("%s: JIALE PLAY MINECRAFT LEH, %s .\n", chatbot_botname(), chatbot_botname());
-	
+	printf("%s: Hello, I'm %s.\n", chatbot_botname(), chatbot_botname());
+		
 	/* main command loop */
 	do {
 	

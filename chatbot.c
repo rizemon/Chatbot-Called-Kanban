@@ -54,7 +54,7 @@
  */
 const char *chatbot_botname() {
 
-	return "Alexa";
+	return "Chatbot";
 	
 }
 
