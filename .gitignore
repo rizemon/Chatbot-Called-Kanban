@@ -55,4 +55,7 @@ dkms.conf
 chat1002
 playground
 
+Makefile
+playground.c
+
 .vscode
