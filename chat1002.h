@@ -47,9 +47,9 @@ int chatbot_is_reset(const char *intent);
 int chatbot_do_reset(int inc, char *inv[], char *response, int n);
 int chatbot_is_save(const char *intent);
 int chatbot_do_save(int inc, char *inv[], char *response, int n);
-void smalltalk(void);
-int chatbot_is_smalltalk(const char *intent, Node * smalltalks);
-int chatbot_do_smalltalk(int inc, char *inv[], char *resonse, int n, Node * smalltalks);
+void smalltalk_hashtable(void);
+int chatbot_is_smalltalk(const char *intent);
+int chatbot_do_smalltalk(int inc, char *inv[], char *resonse, int n);
 
 /* functions defined in knowledge.c */
 int knowledge_get(const char *intent, const char *entity, char *response, int n);
