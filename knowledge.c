@@ -37,17 +37,19 @@
  */
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
 
-	if (!(compare_token(intent, "what") || compare_token(intent, "who") || compare_token(intent, "where"))){
-		return KB_INVALID;
-	}
+	Node * found = NULL;
+	if(compare_token(intent, "what") == 0) found = searchKnowledgeBase(kb, "what", entity);
+	else if(compare_token(intent, "where") == 0) found = searchKnowledgeBase(kb, "where", entity);
+	else if(compare_token(intent, "who") == 0) found = searchKnowledgeBase(kb, "who", entity);
+	else return KB_INVALID;
 	
-	Node * found = searchKnowledgeBase(kb, intent, entity);
-	 if(found == NULL){
-        return KB_NOTFOUND;
-    }else{
+	if(found == NULL){
+		return KB_NOTFOUND;
+	}else{
 		getNodeContent(found, response);
         return KB_OK;
-    }
+	}
+
 }
 
 
@@ -67,6 +69,7 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
  *   KB_INVALID, if the intent is not a valid question word
  */
 int knowledge_put(const char *intent, const char *entity, const char *response) {
+	printf("%s\n", intent);
 	if(compare_token(intent, "what")==0){
 		Node * newNode = createNode(entity, response);
 		if(newNode ==NULL){
