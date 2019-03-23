@@ -216,10 +216,6 @@ int chatbot_is_question(const char *intent) {
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
-	/* to be implemented */
-	/*Grabs user input and stores into a linked-list. 
-	Removing the first word (what,where,how). 
-	Todo:FIX WHERE*/
 	char *intent = inv[0];
 	char entity[MAX_ENTITY];
 	int counter =0;
@@ -241,7 +237,7 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		//follow format in docs
 		char answer[MAX_RESPONSE];
 		prompt_user(answer, n,"I don't know. %s %s?",intent,entity);
-		printf("[DEBUG] %s\n", answer);
+		printf("[DEBUG] %s\name	", answer);
 		knowledge_put(intent,entity, answer);
 		snprintf(response, n, "Thank you");	
 
