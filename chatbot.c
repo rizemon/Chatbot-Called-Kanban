@@ -237,7 +237,6 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		//follow format in docs
 		char answer[MAX_RESPONSE];
 		prompt_user(answer, n,"I don't know. %s %s?",intent,entity);
-		printf("[DEBUG] %s\name	", answer);
 		knowledge_put(intent,entity, answer);
 		snprintf(response, n, "Thank you");	
 
