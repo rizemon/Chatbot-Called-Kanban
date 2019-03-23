@@ -36,15 +36,18 @@ Node ** insertHashTable(Node ** hashTable, Node * node){
     //Calculate hash
     unsigned long hash = hash_fn(node->key) % BUCKET_SIZE;
     //Retrieve node from linked list
-    Node * found = findNode(hashTable[hash], node->key);
+    
+    Node * found = findNode(hashTable[hash], node->original);
+
     //If exist, update content of node
     if(found){
-        found = modifyNode(found, node->content);
+        found = modifyNode(found, node->original, node->content);
         //Free the node
         freeNode(node);
-    } 
+    }
     //If not, add node to linked list
     else hashTable[hash] = addNode(hashTable[hash], node);
+    
     return hashTable;
 }
 

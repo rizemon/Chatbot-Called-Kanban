@@ -27,20 +27,27 @@ Node * addNode(Node * headptr, Node * newNode){
     return newNode;
 }
 
-Node * modifyNode(Node * node, char * content){
+Node * modifyNode(Node * node, char * original, char * content){
     if(node == NULL) return NULL;
     //Overwrite content in node
-    if(node) strncpy(node-> content, content, MAX_SIZE);
+    if(node) {
+        strncpy(node-> content, content, MAX_SIZE);
+        strncpy(node-> original, original, MAX_SIZE);
+    }
     return node;
 }
 
 Node * findNode(Node * headptr, char * key){
-
+    
     // Store lowercase version of key
-    char tempKey[MAX_SIZE];
+    char * tempKey = (char *)malloc(sizeof(char) * MAX_SIZE);
     for(int i = 0; i < strlen(key); i++) tempKey[i] = tolower(key[i]);
 
-    return innerFindNode(headptr, tempKey);
+    Node * found = innerFindNode(headptr, tempKey);
+    free(tempKey);
+
+    // Return found node
+    return found;
 
 }
 
@@ -61,11 +68,13 @@ void freeNode(Node * node){
 Node * deleteNode(Node * headptr, char * key){
 
     // Store lowercase version of key
-    char tempKey[MAX_SIZE];
+    char * tempKey = (char *)malloc(sizeof(char) * MAX_SIZE);
     for(int i = 0; i < strlen(key); i++) tempKey[i] = tolower(key[i]);
     
+    headptr = innerDeleteNode(headptr, tempKey);
+    free(tempKey);
     //Return updated head pointer
-    return innerDeleteNode(headptr,tempKey);
+    return headptr;
 }
 
 Node * innerDeleteNode(Node * headptr, char * key){
@@ -119,7 +128,7 @@ void printNode(Node * node){
     //If node is empty
     if(node == NULL) printf("\n");
     //Print the node
-    else printf("%s: %s\n", node->original, node->content);
+    else printf("%s: %s: %s\n", node->key, node->original, node->content);
 }
 
 void printAll(Node * headptr){

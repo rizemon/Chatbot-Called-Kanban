@@ -18,7 +18,7 @@ Node * deleteNode(Node * headptr, char * key);
 Node * clearAll(Node * headptr);
 void printAll(Node * headptr);
 
-Node * modifyNode(Node * node, char * content);
+Node * modifyNode(Node * node, char * original, char * content);
 void freeNode(Node * node);
 void printNode(Node * node);
 
