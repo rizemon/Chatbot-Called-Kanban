@@ -161,9 +161,6 @@ int chatbot_do_exit(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_load(const char *intent) {
 	
-	/* to be implemented */
-	
-	return 0;
 	/*When user types in load(case-insensitive) */
 	return compare_token(intent, "load") == 0;
 	
@@ -182,15 +179,7 @@ int chatbot_is_load(const char *intent) {
 int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 	
 	/* to be implemented */
-	 
-	/* did halfway and realised do later - william */
-	/*printf("Response: %c\n", response);
-	printf("Inc: %d\n", inc);
-	printf("N: %d\n", n);
-	for(int i=0; i<strlen(inv); i++){
-			printf("inv[]: %s\n",inv[i]);
-	}
-	knowledge_read(inv[1]);*/
+
 	return 0;
 	 
 }
@@ -207,10 +196,6 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
  *  0, otherwise
  */
 int chatbot_is_question(const char *intent) {
-	
-	/* to be implemented */
-	
-	return 1;
 	/*When user types in what,where or who(case-insensitive) */
 	return compare_token(intent, "what") == 0 || compare_token(intent, "where") == 0 || compare_token(intent, "who") == 0;
 	
@@ -231,13 +216,12 @@ int chatbot_is_question(const char *intent) {
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
-	
 	/* to be implemented */
 	/*Grabs user input and stores into a linked-list. 
 	Removing the first word (what,where,how). 
 	Todo:FIX WHERE*/
 	char *intent = inv[0];
-	char *entity = malloc(inc);
+	char entity[MAX_ENTITY];
 	int counter =0;
 	for(int i =1; i<inc; i++){
 		if(compare_token(inv[i], "is") != 0 || compare_token(inv[i], "are") != 0 ){
@@ -252,9 +236,16 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		}
 	}
 
-	/*knowledge_get here*/
-	knowledge_get(intent, entity, response, n);
+	
+	if(knowledge_get(intent, entity, response, n) == KB_NOTFOUND){
+		//follow format in docs
+		char answer[MAX_RESPONSE];
+		prompt_user(answer, n,"I don't know. %s %s?",intent,entity);
+		printf("[DEBUG] %s\n", answer);
+		knowledge_put(intent,entity, answer);
+		snprintf(response, n, "Thank you");	
 
+	}
 	return 0;
 }
 
@@ -270,10 +261,6 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
  *  0, otherwise
  */
 int chatbot_is_reset(const char *intent) {
-	
-	/* to be implemented */
-	
-	return 0;
 	/*When user types in reset(case-insensitive) */
 	return compare_token(intent, "reset") == 0;
 	
@@ -291,7 +278,6 @@ int chatbot_is_reset(const char *intent) {
  *   0 (the chatbot always continues chatting after benign reset)
  */
 int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
-	
 	knowledge_reset();
 	char buffer[MAX_RESPONSE];
 	strcpy(buffer, chatbot_botname());
@@ -315,9 +301,7 @@ int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_save(const char *intent) {
 	
-	/* to be implemented */
-	
-	return 0;
+
 	/*When user types in reset(case-insensitive) */
 
 	return compare_token(intent, "save") == 0;
