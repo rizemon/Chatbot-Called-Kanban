@@ -24,52 +24,52 @@
 #define FALSE 0
 
 
+
 const char * findIntent(char buffer[]){
+    // If does not start with "[", means it is a line
     if(buffer[0] != '[') return "";
 
-    char * what = "what";
-    char * where = "where";
-    char * who = "who";
+    // *ptr points to a character in *.
+    char * whatptr = "what";
+    char * whereptr = "where";
+    char * whoptr = "who";
 
-    //If iswhat == 1, continue check for "what"
+    //If is* == 1, continue check for *.
     int iswhat = 1;
-    //If iswhere == 1, continue check for "where"
     int iswhere = 1;
-    //If iswho == 1, continue check for "who"
     int iswho = 1;
 
-    int i;
-    for(i = 1; i < strlen(buffer); i++){
+    // Loop through each character starting after "["
+    for(int i = 1; i < strlen(buffer); i++){
 
-        //If "what", "where" or "who" is found, break
-        if(*what == '\0' || *who == '\0' || *where == '\0') break;
+        //If found closing bracket
+        if(buffer[i] == ']'){
+            //If *ptr is pointing to end of string, means * is found
+            if(*whatptr == '\0') return "what";
+            else if(*whereptr == '\0') return "where";
+            else if(*whoptr == '\0') return "who";
+            //Else it is a invalid section heading
+            else return "[]";
+        }
 
-        //If you are still checking for "what" and current character match, increment to next character
-        if(iswhat && buffer[i] == *what) what++;
+        //If you are still checking for "what" and current character in "what" matches current character in buffer, increment to next character.
+        if(iswhat && buffer[i] == *whatptr) whatptr++;
         //Else stop checking for "what"
         else iswhat = 0;
 
-        if(iswhere && buffer[i] == *where) where++;
+        //If you are still checking for "where" and current character in "where" matches current character in buffer, increment to next character.
+        if(iswhere && buffer[i] == *whereptr) whereptr++;
+        //Else stop checking for "where"
         else iswhere = 0;
 
-        if(iswho && buffer[i] == *who) who++;
+        //If you are still checking for "who" and current character in "who" matches current character in buffer, increment to next character.
+        if(iswho && buffer[i] == *whoptr) whoptr++;
         else iswho = 0;
         
-        if(iswhat == 0 && iswhere == 0 && iswho == 0) return "[]"
     }
 
-    if(buffer[i] == ']') {
-        if(*what == '\0') return "what";
-        else if(*where == '\0') return "where";
-        else if(*who == '\0') return "who";
-    // Invalid section
-        else {
-            return "[]";
-            
-        }
-    }
     //Its a line
-    return "";
+    return "[]";
     
 
     
@@ -118,7 +118,7 @@ int main(){
     char buff[MAX_ENTITY + 1 + MAX_RESPONSE + 1];
 
     //should be ok
-    printf("%s\n", findIntent("[wtf]"));
+    
     // printf("%s\n", findIntent("[where]"));
     // printf("%s\n", findIntent("[who]"));
     // printf("%s\n", findIntent("[what]abc"));
@@ -133,7 +133,7 @@ int main(){
 
     int isSection = FALSE;
     char checkIntent[MAX_ENTITY + 1 + MAX_RESPONSE + 1];
-    char realIntent[MAX_ENTITY + 1 + MAX_RESPONSE + 1];
+    char sectionHeading[MAX_ENTITY + 1 + MAX_RESPONSE + 1];
 
     Node * what = NULL;
     Node * where = NULL;
@@ -141,40 +141,45 @@ int main(){
 
 
 
-    // fp = fopen("/mnt/c/Users/Tan Jia Le/Documents/Chatbot-Called-Kanban/sample.ini", "r");
-    // while ((fgets(buff, size, (FILE*)fp)) != NULL){
-    //     //Remove newline
-    //     buff[strlen(buff)-2] = '\0'; 
-    //     //If empty line, ignore
-    //     if(strlen(buff) == 0) continue;
+    fp = fopen("/mnt/c/Users/Tan Jia Le/Documents/Chatbot-Called-Kanban/sample.ini", "r");
 
-    //     //Find intent if any. If not found, intent == ""
-    //     strcpy(checkIntent,findIntent(buff));
+    // Loop through each line until EOF
+    while ((fgets(buff, size, (FILE*)fp)) != NULL){
+        // Remove newline
+        buff[strlen(buff)-2] = '\0'; 
+        // If empty line, ignore
+        if(strlen(buff) == 0) continue;
 
-    //     // If line is section heading
-    //     if(strlen(checkIntent) != 0){
-    //         //If section heading is an invalid intent
-    //         if(strcmp(checkIntent, "[]") == 0){
-    //             strcpy(realIntent, "");
-    //         }else{
-    //             // Set realIntent to section heading
-    //             strcpy(realIntent, checkIntent);
-    //         }
-    //     }else{
-    //         if(strcmp(realIntent, "what") == 0) what = addNode(what, createNode(buff,""));
-    //         if(strcmp(realIntent, "where") == 0) where = addNode(where, createNode(buff,""));
-    //         if(strcmp(realIntent, "who") == 0) who = addNode(who, createNode(buff,""));
+        // Find intent if any. If not found, buff is a line
+        strcpy(checkIntent,findIntent(buff));
+
+        // If buff is section heading
+        if(strlen(checkIntent) != 0){
+            // If section heading is an invalid intent, set sectionHeading = ""
+            if(strcmp(checkIntent, "[]") == 0) strcpy(sectionHeading, "");
+            // else section heading is a valid intent, set sectionHeading to intent
+            else strcpy(sectionHeading, checkIntent);
+        
+        // buff is a line
+        }else{
             
-    //     }
 
-    // }
+            // If valid sectionHeading, save
+            if(strcmp(sectionHeading, "what") == 0) what = addNode(what, createNode(buff,""));
+            if(strcmp(sectionHeading, "where") == 0) where = addNode(where, createNode(buff,""));
+            if(strcmp(sectionHeading, "who") == 0) who = addNode(who, createNode(buff,""));
+            // Invalid sectionHeading is not saved
+            
+        }
 
-    // printAll(what);
-    // printf("\n");
-    // printAll(where);
-    // printf("\n");
-    // printAll(who);
-    // fclose(fp);
+    }
+
+    printAll(what);
+    printf("\n");
+    printAll(where);
+    printf("\n");
+    printAll(who);
+    fclose(fp);
 
 
      
