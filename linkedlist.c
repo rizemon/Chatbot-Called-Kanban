@@ -9,6 +9,8 @@ Node * createNode(char * key, char * content){
     Node * newNode = (Node *)malloc(sizeof(Node));
     //Save key and content into node
     strncpy(newNode->key, key, MAX_SIZE);
+    for(int i = 0; i < strlen(newNode->key); i++) newNode->key[i] = tolower(newNode->key[i]);
+    strncpy(newNode->original, key, MAX_SIZE);
     strncpy(newNode->content, content, MAX_SIZE);
     //Set pointer to next node to NULL
     newNode->next = NULL;
@@ -33,6 +35,16 @@ Node * modifyNode(Node * node, char * content){
 }
 
 Node * findNode(Node * headptr, char * key){
+
+    // Store lowercase version of key
+    char tempKey[MAX_SIZE];
+    for(int i = 0; i < strlen(key); i++) tempKey[i] = tolower(key[i]);
+
+    return innerFindNode(headptr, tempKey);
+
+}
+
+Node * innerFindNode(Node * headptr, char * key){
     //Node cannot be found
     if(headptr == NULL) return NULL;
     //If node's key matches
@@ -43,12 +55,20 @@ Node * findNode(Node * headptr, char * key){
 
 void freeNode(Node * node){
     //Free the node
-    // free(node->key);
-    // free(node->content);
     free(node);
 }
 
 Node * deleteNode(Node * headptr, char * key){
+
+    // Store lowercase version of key
+    char tempKey[MAX_SIZE];
+    for(int i = 0; i < strlen(key); i++) tempKey[i] = tolower(key[i]);
+    
+    //Return updated head pointer
+    return innerDeleteNode(headptr,tempKey);
+}
+
+Node * innerDeleteNode(Node * headptr, char * key){
     if(headptr == NULL) return NULL;
 
     //If head node is to be deleted
@@ -63,7 +83,7 @@ Node * deleteNode(Node * headptr, char * key){
     }
     
     //If next node is to be deleted
-    if(strcmp(headptr->next->key, key)){
+    if(strcmp(headptr->next->key, key) == 0){
         //Node to be free-ed
         Node * temp = headptr->next;
         //Point current node's next pointer to the next next node
@@ -73,7 +93,7 @@ Node * deleteNode(Node * headptr, char * key){
         return headptr;
     }
     //Recursively point current node's next pointer to the next node
-    headptr->next = deleteNode(headptr->next,key);
+    headptr->next = innerDeleteNode(headptr->next,key);
     //Return updated head pointer
     return headptr;
 }
@@ -88,7 +108,7 @@ Node * clearAll(Node * headptr){
 }
 
 void getNodeKey(Node * node, char * key){
-    if(node) strncpy(key, node->key, MAX_SIZE);
+    if(node) strncpy(key, node->original, MAX_SIZE);
 }
 
 void getNodeContent(Node * node, char * content){
@@ -99,7 +119,7 @@ void printNode(Node * node){
     //If node is empty
     if(node == NULL) printf("\n");
     //Print the node
-    else printf("%s: %s\n", node->key, node->content);
+    else printf("%s: %s\n", node->original, node->content);
 }
 
 void printAll(Node * headptr){

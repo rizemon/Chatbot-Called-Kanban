@@ -11,7 +11,7 @@ unsigned long hash_fn(char * str){
     unsigned long magic_number = 5381;
     int i;
     for(i = 0; i < strlen(str); i++){
-        int c = str[i];
+        int c = tolower(str[i]);
         magic_number = (magic_number<<5) + magic_number + c;
     }
     return magic_number;
