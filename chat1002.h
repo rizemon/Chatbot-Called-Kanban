@@ -58,5 +58,9 @@ void knowledge_reset();
 int knowledge_read(FILE *f);
 void knowledge_write(FILE *f);
 
+int startWith(char buffer[], char prefix[]);
+const char * findIntent(char buffer[]);
+void splitEntityResponse(char buffer[], char * entity, char * response);
+
 extern KnowledgeBase * kb;
 #endif
