@@ -36,7 +36,6 @@
  *   KB_INVALID, if 'intent' is not a recognised question word
  */
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
-
 	Node * found = NULL;
 	if(compare_token(intent, "what") == 0) found = searchKnowledgeBase(kb, "what", entity);
 	else if(compare_token(intent, "where") == 0) found = searchKnowledgeBase(kb, "where", entity);

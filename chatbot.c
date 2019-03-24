@@ -226,24 +226,32 @@ int chatbot_is_question(const char *intent) {
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	char *intent = inv[0];
 	char entity[MAX_ENTITY];
+	char *removed[MAX_ENTITY];
 	int counter =0;
 	for(int i =1; i<inc; i++){
-		if(compare_token(inv[i], "is") != 0 || compare_token(inv[i], "are") != 0 ){
-			if(counter == 0){
-				strcpy(entity, inv[i]);
-				strcat(entity, " ");
+		//checks for if/are and removes them from entity
+		if(compare_token(inv[i], "is") != 0){
+			if(compare_token(inv[i], "are") != 0){
+				if(counter == 0){
+					strcpy(entity, inv[i]);
+					strcat(entity, " ");
+				}else{
+					strcat(entity,inv[i]);
+					strcat(entity," ");
+				}
 			}else{
-				strcat(entity,inv[i]);
-				strcat(entity," ");
+				strcpy(removed,inv[i]);
 			}
 			counter++;
+		}else{
+			strcpy(removed,inv[i]);
 		}
 	}	
 	
 	if(knowledge_get(intent, entity, response, n) == KB_NOTFOUND){
 		//follow format in docs
 		char answer[MAX_RESPONSE];
-		prompt_user(answer, n,"I don't know. %s %s?",intent,entity);
+		prompt_user(answer, n,"I don't know. %s %s %s?",intent,removed,entity);
 		knowledge_put(intent,entity, answer);
 		snprintf(response, n, "Thank you");	
 
