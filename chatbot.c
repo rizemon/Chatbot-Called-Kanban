@@ -46,7 +46,8 @@
 #include "linkedlist.h"
 #include "hashtable.h"
 #include "knowledgebase.h"
- 
+
+KnowledgeBase * kb = NULL;
  
 /*
  * Get the name of the chatbot.
@@ -89,7 +90,9 @@ int chatbot_main(int inc, char *inv[], char *response, int n) {
 		snprintf(response, n, "");
 		return 0;
 	}
-
+	if (kb == NULL){
+		kb = createKnowledgeBase();
+	}
 	/* look for an intent and invoke the corresponding do_* function */
 	if (chatbot_is_exit(inv[0]))
 		return chatbot_do_exit(inc, inv, response, n);
@@ -158,9 +161,8 @@ int chatbot_do_exit(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_load(const char *intent) {
 	
-	/* to be implemented */
-	
-	return 0;
+	/*When user types in load(case-insensitive) */
+	return compare_token(intent, "load") == 0;
 	
 }
 
@@ -177,7 +179,7 @@ int chatbot_is_load(const char *intent) {
 int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 	
 	/* to be implemented */
-	 
+
 	return 0;
 	 
 }
@@ -194,10 +196,8 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
  *  0, otherwise
  */
 int chatbot_is_question(const char *intent) {
-	
-	/* to be implemented */
-	
-	return 0;
+	/*When user types in what,where or who(case-insensitive) */
+	return compare_token(intent, "what") == 0 || compare_token(intent, "where") == 0 || compare_token(intent, "who") == 0;
 	
 }
 
@@ -216,11 +216,32 @@ int chatbot_is_question(const char *intent) {
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
+	char *intent = inv[0];
+	char entity[MAX_ENTITY];
+	int counter =0;
+	for(int i =1; i<inc; i++){
+		if(compare_token(inv[i], "is") != 0 || compare_token(inv[i], "are") != 0 ){
+			if(counter == 0){
+				strcpy(entity, inv[i]);
+				strcat(entity, " ");
+			}else{
+				strcat(entity,inv[i]);
+				strcat(entity," ");
+			}
+			counter++;
+		}
+	}
+
 	
-	/* to be implemented */
-	 
+	if(knowledge_get(intent, entity, response, n) == KB_NOTFOUND){
+		//follow format in docs
+		char answer[MAX_RESPONSE];
+		prompt_user(answer, n,"I don't know. %s %s?",intent,entity);
+		knowledge_put(intent,entity, answer);
+		snprintf(response, n, "Thank you");	
+
+	}
 	return 0;
-	 
 }
 
 
@@ -235,10 +256,8 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
  *  0, otherwise
  */
 int chatbot_is_reset(const char *intent) {
-	
-	/* to be implemented */
-	
-	return 0;
+	/*When user types in reset(case-insensitive) */
+	return compare_token(intent, "reset") == 0;
 	
 }
 
@@ -251,11 +270,15 @@ int chatbot_is_reset(const char *intent) {
  *
  * Returns:
  *   0 (the chatbot always continues chatting after beign reset)
+ *   0 (the chatbot always continues chatting after benign reset)
  */
 int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
+	knowledge_reset();
+	char buffer[MAX_RESPONSE];
+	strcpy(buffer, chatbot_botname());
+	strcat(buffer, " resetted");
+	snprintf(response, n, buffer);
 	
-	/* to be implemented */
-	 
 	return 0;
 	 
 }
@@ -273,9 +296,10 @@ int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_save(const char *intent) {
 	
-	/* to be implemented */
-	
-	return 0;
+
+	/*When user types in reset(case-insensitive) */
+
+	return compare_token(intent, "save") == 0;
 	
 }
 

@@ -5,6 +5,7 @@
 
 typedef struct NodeStruct {
     char key[MAX_SIZE];
+    char original[MAX_SIZE];
     char content[MAX_SIZE];
     struct NodeStruct * next;
 }Node;
@@ -17,11 +18,14 @@ Node * deleteNode(Node * headptr, char * key);
 Node * clearAll(Node * headptr);
 void printAll(Node * headptr);
 
-Node * modifyNode(Node * node, char * content);
+Node * modifyNode(Node * node, char * original, char * content);
 void freeNode(Node * node);
 void printNode(Node * node);
 
 void getNodeKey(Node * node, char * key);
 void getNodeContent(Node * node, char * content);
+
+Node * innerDeleteNode(Node * headptr, char * key);
+Node * innerFindNode(Node * headptr, char * key);
 
 #endif
