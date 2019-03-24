@@ -24,58 +24,59 @@
 #define FALSE 0
 
 
+int startWith(char buffer[], char prefix[]){
+    int i = 0;
+
+    while(buffer[i] != '\0' && prefix[i] != '\0'){
+        if(toupper(prefix[i]) != toupper(buffer[i])) return FALSE;
+        i++;
+    }
+    if(prefix[i] == '\0') return TRUE;
+    return FALSE;
+
+}
+
+
+
 
 const char * findIntent(char buffer[]){
     // If does not start with "[", means it is a line
     if(buffer[0] != '[') return "";
 
-    // *ptr points to a character in *.
-    char * whatptr = "what";
-    char * whereptr = "where";
-    char * whoptr = "who";
+    // If start with [what], [where], [who], return what, where, who
+    if(startWith(buffer, "[what]")) return "what";
+    if(startWith(buffer, "[where]")) return "where";
+    if(startWith(buffer, "[who]")) return "who";
 
-    //If is* == 1, continue check for *.
-    int iswhat = 1;
-    int iswhere = 1;
-    int iswho = 1;
+    // Check if section heading 
+    for(int i = 1; i < strlen(buffer); i++) if (buffer[i] == ']') return "[]";
 
-    // Loop through each character starting after "["
-    for(int i = 1; i < strlen(buffer); i++){
-
-        //If found closing bracket
-        if(buffer[i] == ']'){
-            //If *ptr is pointing to end of string, means * is found
-            if(*whatptr == '\0') return "what";
-            else if(*whereptr == '\0') return "where";
-            else if(*whoptr == '\0') return "who";
-            //Else it is a invalid section heading
-            else return "[]";
-        }
-
-        //If you are still checking for "what" and current character in "what" matches current character in buffer, increment to next character.
-        if(iswhat && buffer[i] == *whatptr) whatptr++;
-        //Else stop checking for "what"
-        else iswhat = 0;
-
-        //If you are still checking for "where" and current character in "where" matches current character in buffer, increment to next character.
-        if(iswhere && buffer[i] == *whereptr) whereptr++;
-        //Else stop checking for "where"
-        else iswhere = 0;
-
-        //If you are still checking for "who" and current character in "who" matches current character in buffer, increment to next character.
-        if(iswho && buffer[i] == *whoptr) whoptr++;
-        else iswho = 0;
-        
-    }
-
-    //Its a line
-    return "[]";
-    
-
-    
+    // It is a line
+    return "";
 }
- 
+
+void splitEntityResponse(char buffer[], char * entity, char * response){
+    int entityidx = 0;
+    int responseidx = 0;
+
+    int delimited = 0;
+
+    for(int i = 0; i < strlen(buffer); i++){
+        if(buffer[i] == '=' && delimited == 0){
+            delimited = 1;
+        }else{
+            if(delimited == 0) entity[entityidx++] = buffer[i];
+            else response[responseidx++] = buffer[i];
+        }
+    }
+    entity[entityidx] = '\0';
+    response[responseidx] = '\0';
+} 
+
 int main(){ 
+
+
+    // printf("%d\n", startWith("ay","yay"));
     // Node ** newHashTable = NULL; 
  
     // newHashTable = createHashTable(); 
@@ -116,24 +117,12 @@ int main(){
     int size = MAX_ENTITY + 1 + MAX_RESPONSE + 1;
 
     char buff[MAX_ENTITY + 1 + MAX_RESPONSE + 1];
-
-    //should be ok
     
-    // printf("%s\n", findIntent("[where]"));
-    // printf("%s\n", findIntent("[who]"));
-    // printf("%s\n", findIntent("[what]abc"));
-    // printf("%s\n", findIntent("[what]\[w]gfdg[who]dfgd"));
-
-    // //should not be ok
-    // printf("%s\n", findIntent("[whatabc"));
-    // printf("%s\n", findIntent("[w]"));
-    // printf("%s\n", findIntent("what]"));
-    // printf("%s\n", findIntent("[fuck]"));
-    // printf("%s\n", findIntent("a[what]"));
-
-    int isSection = FALSE;
-    char checkIntent[MAX_ENTITY + 1 + MAX_RESPONSE + 1];
     char sectionHeading[MAX_ENTITY + 1 + MAX_RESPONSE + 1];
+    char intent[MAX_ENTITY + 1 + MAX_RESPONSE + 1];
+
+    char entity[MAX_ENTITY];
+    char response[MAX_RESPONSE];
 
     Node * what = NULL;
     Node * where = NULL;
@@ -150,25 +139,28 @@ int main(){
         // If empty line, ignore
         if(strlen(buff) == 0) continue;
 
-        // Find intent if any. If not found, buff is a line
-        strcpy(checkIntent,findIntent(buff));
+        // Find section heading
+        strcpy(sectionHeading, findIntent(buff));
 
-        // If buff is section heading
-        if(strlen(checkIntent) != 0){
-            // If section heading is an invalid intent, set sectionHeading = ""
-            if(strcmp(checkIntent, "[]") == 0) strcpy(sectionHeading, "");
-            // else section heading is a valid intent, set sectionHeading to intent
-            else strcpy(sectionHeading, checkIntent);
+        // If section heading is found in buff
+        if(strlen(sectionHeading) != 0){
+            // If section heading is an invalid intent, set intent to ""
+            if(strcmp(sectionHeading, "[]") == 0) strcpy(intent, "");
+            // else section heading is a valid intent, set intent to section heading
+            else strcpy(intent, sectionHeading);
         
         // buff is a line
         }else{
-            
-
-            // If valid sectionHeading, save
-            if(strcmp(sectionHeading, "what") == 0) what = addNode(what, createNode(buff,""));
-            if(strcmp(sectionHeading, "where") == 0) where = addNode(where, createNode(buff,""));
-            if(strcmp(sectionHeading, "who") == 0) who = addNode(who, createNode(buff,""));
-            // Invalid sectionHeading is not saved
+            //Split into entity and response
+            splitEntityResponse(buff, entity, response);
+            //If there is a reponse
+            if(strlen(response) > 0){
+                // If valid intent, save entity and response
+                if (strcmp(intent, "what") == 0) what = addNode(what, createNode(entity, response));
+                if (strcmp(intent, "where") == 0) where = addNode(where, createNode(entity, response));
+                if (strcmp(intent, "who") == 0) who = addNode(who, createNode(entity, response));
+                // If invalid intent, entity and response not saved
+            }
             
         }
 
