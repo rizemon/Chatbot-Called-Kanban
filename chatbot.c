@@ -309,10 +309,10 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 void smalltalk_hashtable(){
     /** Create smalltalk nodes containing key pair values of all the small talk phrases*/
     Node * smalltalk1 = createNode("bye", "goodbye");
+    Node * smalltalk5 = createNode("goodbye", "bye");
     Node * smalltalk2 = createNode("hi", "hello");
     Node * smalltalk3 = createNode("hey", "hello");
     Node * smalltalk4 = createNode("sup", "whatsup");
-    Node * smalltalk5 = createNode("hie", "hey");
     
     /** Create a hashtable to store smalltalks*/
     smalltalks = createHashTable();
@@ -361,10 +361,10 @@ int chatbot_is_smalltalk(const char *intent) {
 int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
     char *intent = inv[0];
     char *smalltalk_response = findHashTable(smalltalks, intent)->content;
-    char end_phrases[2][10] = {"bye", "goodbye"};
+    char end_phrases[][10] = {"bye", "goodbye"};
     int index, str_cmp, found= 0;
     /* Check if intent is any of the ending phrases */
-    for(index = 0; index < 2; index++)
+    for(index = 0; index < sizeof(end_phrases) / sizeof(char *); index++)
     {
             str_cmp = strcmp(intent, end_phrases[index]);
             if (str_cmp == 0) {
