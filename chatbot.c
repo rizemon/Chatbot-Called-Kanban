@@ -47,6 +47,10 @@
 #include "hashtable.h"
 #include "knowledgebase.h"
 
+/** Global Variable for hashtable containing all the smalltalk phrases*/
+/** Initialise smalltalks variable as NULL*/
+Node ** smalltalks = NULL;
+
 KnowledgeBase * kb = NULL;
  
 /*
@@ -84,7 +88,11 @@ const char *chatbot_username() {
  *   1, if the chatbot should stop (i.e. it detected the EXIT intent)
  */
 int chatbot_main(int inc, char *inv[], char *response, int n) {
-	
+    /** Checks if hashtable has been created before invoking create hashtable function */
+    if (smalltalks == NULL){
+        /** Creates smalltalk hash table*/
+        smalltalk_hashtable();
+    }
 	/* check for empty input */
 	if (inc < 1) {
 		snprintf(response, n, "");
@@ -96,7 +104,7 @@ int chatbot_main(int inc, char *inv[], char *response, int n) {
 	/* look for an intent and invoke the corresponding do_* function */
 	if (chatbot_is_exit(inv[0]))
 		return chatbot_do_exit(inc, inv, response, n);
-	else if (chatbot_is_smalltalk(inv[0]))
+    else if (chatbot_is_smalltalk(inv[0]))
 		return chatbot_do_smalltalk(inc, inv, response, n);
 	else if (chatbot_is_load(inv[0]))
 		return chatbot_do_load(inc, inv, response, n);
@@ -161,9 +169,6 @@ int chatbot_do_exit(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_load(const char *intent) {
 	
-	/* to be implemented */
-	
-	return 0;
 	/*When user types in load(case-insensitive) */
 	return compare_token(intent, "load") == 0;
 	
@@ -182,15 +187,7 @@ int chatbot_is_load(const char *intent) {
 int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 	
 	/* to be implemented */
-	 
-	/* did halfway and realised do later - william */
-	/*printf("Response: %c\n", response);
-	printf("Inc: %d\n", inc);
-	printf("N: %d\n", n);
-	for(int i=0; i<strlen(inv); i++){
-			printf("inv[]: %s\n",inv[i]);
-	}
-	knowledge_read(inv[1]);*/
+
 	return 0;
 	 
 }
@@ -207,10 +204,6 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
  *  0, otherwise
  */
 int chatbot_is_question(const char *intent) {
-	
-	/* to be implemented */
-	
-	return 1;
 	/*When user types in what,where or who(case-insensitive) */
 	return compare_token(intent, "what") == 0 || compare_token(intent, "where") == 0 || compare_token(intent, "who") == 0;
 	
@@ -231,13 +224,8 @@ int chatbot_is_question(const char *intent) {
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
-	
-	/* to be implemented */
-	/*Grabs user input and stores into a linked-list. 
-	Removing the first word (what,where,how). 
-	Todo:FIX WHERE*/
 	char *intent = inv[0];
-	char *entity = malloc(inc);
+	char entity[MAX_ENTITY];
 	int counter =0;
 	for(int i =1; i<inc; i++){
 		if(compare_token(inv[i], "is") != 0 || compare_token(inv[i], "are") != 0 ){
@@ -252,9 +240,15 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		}
 	}
 
-	/*knowledge_get here*/
-	knowledge_get(intent, entity, response, n);
+	
+	if(knowledge_get(intent, entity, response, n) == KB_NOTFOUND){
+		//follow format in docs
+		char answer[MAX_RESPONSE];
+		prompt_user(answer, n,"I don't know. %s %s?",intent,entity);
+		knowledge_put(intent,entity, answer);
+		snprintf(response, n, "Thank you");	
 
+	}
 	return 0;
 }
 
@@ -270,10 +264,6 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
  *  0, otherwise
  */
 int chatbot_is_reset(const char *intent) {
-	
-	/* to be implemented */
-	
-	return 0;
 	/*When user types in reset(case-insensitive) */
 	return compare_token(intent, "reset") == 0;
 	
@@ -291,7 +281,6 @@ int chatbot_is_reset(const char *intent) {
  *   0 (the chatbot always continues chatting after benign reset)
  */
 int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
-	
 	knowledge_reset();
 	char buffer[MAX_RESPONSE];
 	strcpy(buffer, chatbot_botname());
@@ -315,9 +304,7 @@ int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_save(const char *intent) {
 	
-	/* to be implemented */
-	
-	return 0;
+
 	/*When user types in reset(case-insensitive) */
 
 	return compare_token(intent, "save") == 0;
@@ -341,7 +328,28 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 	return 0;
 	 
 }
- 
+
+/** This function creates a hashtable filled with smalltalk nodes that store key value pairs of smalltalk intent and response respectively
+    This functions directly modifies the values of the global variable smalltalks so all other functions can reference directly reference the smalltalk hashtable
+ */
+void smalltalk_hashtable(){
+    /** Create smalltalk nodes containing key pair values of all the small talk phrases*/
+    Node * smalltalk1 = createNode("bye", "goodbye");
+    Node * smalltalk5 = createNode("goodbye", "bye");
+    Node * smalltalk2 = createNode("hi", "hello");
+    Node * smalltalk3 = createNode("hey", "hello");
+    Node * smalltalk4 = createNode("sup", "whatsup");
+    
+    /** Create a hashtable to store smalltalks*/
+    smalltalks = createHashTable();
+    
+    /** Insert nodes into smalltalks hashtable*/
+    smalltalks = insertHashTable(smalltalks, smalltalk1 );
+    smalltalks = insertHashTable(smalltalks, smalltalk2 );
+    smalltalks = insertHashTable(smalltalks, smalltalk3 );
+    smalltalks = insertHashTable(smalltalks, smalltalk4 );
+    smalltalks = insertHashTable(smalltalks, smalltalk5 );
+}
  
 /*
  * Determine which an intent is smalltalk.
@@ -355,10 +363,13 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
  *  0, otherwise
  */
 int chatbot_is_smalltalk(const char *intent) {
-	
-	/* to be implemented */
-	
-	return 0;
+    /** If intent matches key inside linkedlist smalltalk, return 1, otherwise, return 0 */
+    if (findHashTable(smalltalks, intent) != NULL) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
  
 }
 
@@ -374,10 +385,29 @@ int chatbot_is_smalltalk(const char *intent) {
  *   1, if the chatbot should stop chatting (e.g. the smalltalk was "goodbye" etc.)
  */
 int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
-	
-	/* to be implemented */
-	
-	return 0;
-	
+    char *intent = inv[0];
+    char *smalltalk_response = findHashTable(smalltalks, intent)->content;
+    char end_phrases[][10] = {"bye", "goodbye"};
+    int index, str_cmp, found= 0;
+    /* Check if intent is any of the ending phrases */
+    for(index = 0; index < sizeof(end_phrases) / sizeof(char *); index++)
+    {
+            str_cmp = strcmp(intent, end_phrases[index]);
+            if (str_cmp == 0) {
+                /** smalltalk matches end_phrases */
+                found += 1;
+            }
+    }
+    /** If no matching end_phrases found, print smalltalk_response and return 0 to continue catting*/
+    if (found == 0) {
+        snprintf(response,  n, smalltalk_response);
+        return 0;
+    }
+    /** If a matching end_phrase was found, print smalltalk_response and return 1 to end the chat*/
+    else {
+        snprintf(response,  n, smalltalk_response);
+        return 1;
+    }
+    
 }
   

@@ -36,21 +36,20 @@
  *   KB_INVALID, if 'intent' is not a recognised question word
  */
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
-	if (!(compare_token(intent, "what") || compare_token(intent, "who") || compare_token(intent, "where"))){
-		return KB_INVALID;
-	}
+
+	Node * found = NULL;
+	if(compare_token(intent, "what") == 0) found = searchKnowledgeBase(kb, "what", entity);
+	else if(compare_token(intent, "where") == 0) found = searchKnowledgeBase(kb, "where", entity);
+	else if(compare_token(intent, "who") == 0) found = searchKnowledgeBase(kb, "who", entity);
+	else return KB_INVALID;
 	
-	Node * found = searchKnowledgeBase(kb, intent, entity);
-	 if(found == NULL){
-        return KB_NOTFOUND;
-    }else{
+	if(found == NULL){
+		return KB_NOTFOUND;
+	}else{
 		getNodeContent(found, response);
         return KB_OK;
-    }
-	/* to be implemented */
+	}
 
-	return KB_NOTFOUND;
-	
 }
 
 
@@ -65,13 +64,13 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
  *   response  - the response for this question and entity
  *
  * Returns:
- *   KB_FOUND, if successful
+ *   KB_OK, if successful
  *   KB_NOMEM, if there was a memory allocation failure
  *   KB_INVALID, if the intent is not a valid question word
  */
 int knowledge_put(const char *intent, const char *entity, const char *response) {
-	
-	if(compare_token(intent, "what")){
+	printf("%s\n", intent);
+	if(compare_token(intent, "what")==0){
 		Node * newNode = createNode(entity, response);
 		if(newNode ==NULL){
 			return KB_NOMEM;
@@ -83,7 +82,7 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 		}
 		
 	}
-	else if (compare_token(intent, "where")){
+	else if (compare_token(intent, "where") ==0){
 		Node * newNode = createNode(entity, response);
 		if(newNode ==NULL){
 			return KB_NOMEM;
@@ -94,7 +93,7 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 			return KB_OK;
 		}
 	}
-	else if (compare_token(intent, "who")){	
+	else if (compare_token(intent, "who")== 0){	
 		Node * newNode = createNode(entity, response);
 		if(newNode ==NULL){
 			return KB_NOMEM;
@@ -123,17 +122,14 @@ int knowledge_read(FILE *f) {
 	
 	/* to be implemented */
 	
-	/*printf("Loaded %s", f);*/
 	return 0;
 }
 
 
 /*
- * Reset the knowledge base, removing all know entitities from all intents.
  * Reset the knowledge base, removing all know entities from all intents.
  */
 void knowledge_reset() {
-	
 	kb = clearKnowledgeBase(kb);
 	
 }
