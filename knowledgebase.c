@@ -28,6 +28,7 @@ Node * searchKnowledgeBase(KnowledgeBase * kb, char * intent, char * entity){
 KnowledgeBase * insertKnowledgeBase(KnowledgeBase * kb, char * intent, Node * node){
     if(node==NULL) return kb;
     if(kb == NULL) return NULL;
+
     //Insert entity and response to corresponding dictioanry
     if(strcmp("where",intent) == 0) kb->whereDict = insertHashTable(kb->whereDict, node);
     if(strcmp("what",intent) == 0) kb->whatDict = insertHashTable(kb->whatDict, node);

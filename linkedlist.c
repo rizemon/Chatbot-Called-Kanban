@@ -8,10 +8,10 @@ Node * createNode(char * key, char * content){
     //Allocate space for a single node
     Node * newNode = (Node *)malloc(sizeof(Node));
     //Save key and content into node
-    strncpy(newNode->key, key, MAX_SIZE);
-    for(int i = 0; i < strlen(newNode->key); i++) newNode->key[i] = tolower(newNode->key[i]);
     strncpy(newNode->original, key, MAX_SIZE);
     strncpy(newNode->content, content, MAX_SIZE);
+    for(int i = 0; i < strlen(newNode->original); i++) newNode->key[i] = tolower(newNode->original[i]);
+    newNode->key[strlen(newNode->original)] = '\0';
     //Set pointer to next node to NULL
     newNode->next = NULL;
     return newNode;
@@ -23,6 +23,7 @@ Node * addNode(Node * headptr, Node * newNode){
     if(newNode == NULL) return headptr;
     //Set new node to point to the current head node
     newNode->next = headptr;
+    
     //Set new node to be the new head node
     return newNode;
 }
@@ -42,6 +43,7 @@ Node * findNode(Node * headptr, char * key){
     // Store lowercase version of key
     char * tempKey = (char *)malloc(sizeof(char) * MAX_SIZE);
     for(int i = 0; i < strlen(key); i++) tempKey[i] = tolower(key[i]);
+    tempKey[strlen(key)] = '\0';
 
     Node * found = innerFindNode(headptr, tempKey);
     free(tempKey);
@@ -70,6 +72,7 @@ Node * deleteNode(Node * headptr, char * key){
     // Store lowercase version of key
     char * tempKey = (char *)malloc(sizeof(char) * MAX_SIZE);
     for(int i = 0; i < strlen(key); i++) tempKey[i] = tolower(key[i]);
+    tempKey[strlen(key)] = '\0';
     
     headptr = innerDeleteNode(headptr, tempKey);
     free(tempKey);

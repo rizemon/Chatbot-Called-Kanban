@@ -238,8 +238,7 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 			}
 			counter++;
 		}
-	}
-
+	}	
 	
 	if(knowledge_get(intent, entity, response, n) == KB_NOTFOUND){
 		//follow format in docs

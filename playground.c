@@ -75,36 +75,29 @@ void splitEntityResponse(char buffer[], char * entity, char * response){
 
 int main(){ 
 
+    Node ** newHashTable = NULL; 
+ 
+    newHashTable = createHashTable(); 
+ 
+ 
+    newHashTable = insertHashTable(newHashTable, createNode("love", "someone")); 
 
-    // printf("%d\n", startWith("ay","yay"));
-    // Node ** newHashTable = NULL; 
+    newHashTable = insertHashTable(newHashTable, createNode("LOVEe", "me")); 
+
+
+    Node * found = findNode(newHashTable[904], "LOVEe");
  
-    // newHashTable = createHashTable(); 
- 
-    // Node * newNode = createNode("fuck", "you"); 
- 
-    // newHashTable = insertHashTable(newHashTable, newNode); 
- 
-    // newHashTable = insertHashTable(newHashTable, createNode("fuck", "someone")); 
- 
-    // Node * found = findHashTable(newHashTable, "fuck"); 
-    // if(found == NULL){ 
-    //     //cannot find 
-    // }else{ 
-    //     //can find 
-    //     printNode(found); 
-    // } 
- 
+    // Node * found = findHashTable(newHashTable, "love"); 
+    
     // newHashTable = deleteHashTable(newHashTable, "fuck"); 
     // newHashTable = clearHashTable(newHashTable); 
- 
+    
+    // Node * found = NULL;
     // KnowledgeBase * kb = NULL; 
     // kb = createKnowledgeBase(); 
-    // kb = insertKnowledgeBase(kb , "what", createNode("SIT","fucked up")); 
-    // kb = insertKnowledgeBase(kb , "where", createNode("SIT","fucked up")); 
-    // kb = insertKnowledgeBase(kb , "who", createNode("SIT","fucked up")); 
-     
-    // found = searchKnowledgeBase(kb, "who", "SIT"); 
+    // kb = insertKnowledgeBase(kb , "what", createNode("love","fucked up")); 
+    // kb = insertKnowledgeBase(kb , "what", createNode("LOVEE","fuckeasdd up")); 
+    // found = searchKnowledgeBase(kb, "what", "love"); 
     // if(found == NULL){ 
     //     //cannot find 
     // }else{ 
@@ -112,66 +105,66 @@ int main(){
     // } 
     // kb = clearKnowledgeBase(kb); 
 
-    FILE *fp;
+    // FILE *fp;
 
-    int size = MAX_ENTITY + 1 + MAX_RESPONSE + 1;
+    // int size = MAX_ENTITY + 1 + MAX_RESPONSE + 1;
 
-    char buff[MAX_ENTITY + 1 + MAX_RESPONSE + 1];
+    // char buff[MAX_ENTITY + 1 + MAX_RESPONSE + 1];
     
-    char sectionHeading[MAX_ENTITY + 1 + MAX_RESPONSE + 1];
-    char intent[MAX_ENTITY + 1 + MAX_RESPONSE + 1];
+    // char sectionHeading[MAX_ENTITY + 1 + MAX_RESPONSE + 1];
+    // char intent[MAX_ENTITY + 1 + MAX_RESPONSE + 1];
 
-    char entity[MAX_ENTITY];
-    char response[MAX_RESPONSE];
+    // char entity[MAX_ENTITY];
+    // char response[MAX_RESPONSE];
 
-    Node * what = NULL;
-    Node * where = NULL;
-    Node * who = NULL;
+    // Node * what = NULL;
+    // Node * where = NULL;
+    // Node * who = NULL;
 
 
 
-    fp = fopen("/mnt/c/Users/Tan Jia Le/Documents/Chatbot-Called-Kanban/sample.ini", "r");
+    // fp = fopen("/mnt/c/Users/Tan Jia Le/Documents/Chatbot-Called-Kanban/sample.ini", "r");
 
-    // Loop through each line until EOF
-    while ((fgets(buff, size, (FILE*)fp)) != NULL){
-        // Remove newline
-        buff[strlen(buff)-2] = '\0'; 
-        // If empty line, ignore
-        if(strlen(buff) == 0) continue;
+    // // Loop through each line until EOF
+    // while ((fgets(buff, size, (FILE*)fp)) != NULL){
+    //     // Remove newline
+    //     buff[strlen(buff)-2] = '\0'; 
+    //     // If empty line, ignore
+    //     if(strlen(buff) == 0) continue;
 
-        // Find section heading
-        strcpy(sectionHeading, findIntent(buff));
+    //     // Find section heading
+    //     strcpy(sectionHeading, findIntent(buff));
 
-        // If section heading is found in buff
-        if(strlen(sectionHeading) != 0){
-            // If section heading is an invalid intent, set intent to ""
-            if(strcmp(sectionHeading, "[]") == 0) strcpy(intent, "");
-            // else section heading is a valid intent, set intent to section heading
-            else strcpy(intent, sectionHeading);
+    //     // If section heading is found in buff
+    //     if(strlen(sectionHeading) != 0){
+    //         // If section heading is an invalid intent, set intent to ""
+    //         if(strcmp(sectionHeading, "[]") == 0) strcpy(intent, "");
+    //         // else section heading is a valid intent, set intent to section heading
+    //         else strcpy(intent, sectionHeading);
         
-        // buff is a line
-        }else{
-            //Split into entity and response
-            splitEntityResponse(buff, entity, response);
-            //If there is a reponse
-            if(strlen(response) > 0){
-                // If valid intent, save entity and response
-                if (strcmp(intent, "what") == 0) what = addNode(what, createNode(entity, response));
-                if (strcmp(intent, "where") == 0) where = addNode(where, createNode(entity, response));
-                if (strcmp(intent, "who") == 0) who = addNode(who, createNode(entity, response));
-                // If invalid intent, entity and response not saved
-            }
+    //     // buff is a line
+    //     }else{
+    //         //Split into entity and response
+    //         splitEntityResponse(buff, entity, response);
+    //         //If there is a reponse
+    //         if(strlen(response) > 0){
+    //             // If valid intent, save entity and response
+    //             if (strcmp(intent, "what") == 0) what = addNode(what, createNode(entity, response));
+    //             if (strcmp(intent, "where") == 0) where = addNode(where, createNode(entity, response));
+    //             if (strcmp(intent, "who") == 0) who = addNode(who, createNode(entity, response));
+    //             // If invalid intent, entity and response not saved
+    //         }
             
-        }
+    //     }
 
-    }
+    // }
 
-    printAll(what);
-    printf("\n");
-    printAll(where);
-    printf("\n");
-    printAll(who);
-    fclose(fp);
+    // printAll(what);
+    // printf("\n");
+    // printAll(where);
+    // printf("\n");
+    // printAll(who);
+    // fclose(fp);
 
 
      

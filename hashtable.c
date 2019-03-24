@@ -14,6 +14,7 @@ unsigned long hash_fn(char * str){
         int c = tolower(str[i]);
         magic_number = (magic_number<<5) + magic_number + c;
     }
+    
     return magic_number;
 }
 
@@ -36,7 +37,6 @@ Node ** insertHashTable(Node ** hashTable, Node * node){
     //Calculate hash
     unsigned long hash = hash_fn(node->key) % BUCKET_SIZE;
     //Retrieve node from linked list
-    
     Node * found = findNode(hashTable[hash], node->original);
 
     //If exist, update content of node
