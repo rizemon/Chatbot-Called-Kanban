@@ -36,7 +36,6 @@
  *   KB_INVALID, if 'intent' is not a recognised question word
  */
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
-
 	Node * found = NULL;
 	if(compare_token(intent, "what") == 0) found = searchKnowledgeBase(kb, "what", entity);
 	else if(compare_token(intent, "where") == 0) found = searchKnowledgeBase(kb, "where", entity);
@@ -69,7 +68,6 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
  *   KB_INVALID, if the intent is not a valid question word
  */
 int knowledge_put(const char *intent, const char *entity, const char *response) {
-	printf("%s\n", intent);
 	if(compare_token(intent, "what")==0){
 		Node * newNode = createNode(entity, response);
 		if(newNode ==NULL){
