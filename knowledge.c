@@ -69,7 +69,6 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
  *   KB_INVALID, if the intent is not a valid question word
  */
 int knowledge_put(const char *intent, const char *entity, const char *response) {
-	printf("%s\n", intent);
 	if(compare_token(intent, "what")==0){
 		Node * newNode = createNode(entity, response);
 		if(newNode ==NULL){
