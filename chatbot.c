@@ -245,9 +245,11 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 			}
 		}else{
 		//2nd words onwards are accumulated
+			if(strcmp(entity, "") != 0) strcat(entity, " ");
 			strcat(entity, inv[i]);
+			
 		}
-	}	
+	}
 
 	printf("[DEBUG]Entity:%s\n",entity);
 	if(knowledge_get(intent, entity, response, n) == KB_NOTFOUND){
