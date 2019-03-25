@@ -226,27 +226,29 @@ int chatbot_is_question(const char *intent) {
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	char *intent = inv[0];
 	char entity[MAX_ENTITY];
-	char *removed[MAX_ENTITY];
-	int counter =0;
-	for(int i =1; i<inc; i++){
-		//checks for if/are and removes them from entity
-		if(compare_token(inv[i], "is") != 0){
-			if(compare_token(inv[i], "are") != 0){
-				if(counter == 0){
-					strcpy(entity, inv[i]);
-					strcat(entity, " ");
-				}else{
-					strcat(entity,inv[i]);
-					strcat(entity," ");
-				}
+	char removed[MAX_ENTITY];
+	for(int i = 1; i<inc; i++){
+		if(i == 1){
+		//If 1st word is "is" or "are"
+			if(compare_token(inv[i], "is") == 0 || compare_token(inv[i], "are") == 0 ){
+				//Store removed word
+				strcpy(removed, inv[i]);
+				//Initialize entity to blank
+				strcpy(entity,"");
+
+		//If 1st word is not "is" or "are"
 			}else{
-				strcpy(removed,inv[i]);
+				//Set removed to blank
+				strcpy(removed, "");
+				//Initialize entity to first word
+				strcpy(entity, inv[i]);
 			}
-			counter++;
 		}else{
-			strcpy(removed,inv[i]);
+		//2nd words onwards are accumulated
+			strcat(entity, inv[i]);
 		}
 	}	
+
 	printf("[DEBUG]Entity:%s\n",entity);
 	if(knowledge_get(intent, entity, response, n) == KB_NOTFOUND){
 		char answer[MAX_RESPONSE];
