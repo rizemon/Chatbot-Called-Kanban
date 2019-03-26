@@ -20,6 +20,7 @@
 #include "hashtable.h"
 #include "knowledgebase.h"
 
+KnowledgeBase * kb = NULL;
 
 /*
  * Get the response to a question.
@@ -235,3 +236,7 @@ void splitEntityResponse(char buffer[], char * entity, char * response){
     entity[entityidx] = '\0';
     response[responseidx] = '\0';
 } 
+
+void knowledge_init(){
+    if (kb == NULL) kb = createKnowledgeBase();
+}

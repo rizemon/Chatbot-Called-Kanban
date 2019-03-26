@@ -15,7 +15,7 @@ KnowledgeBase * createKnowledgeBase(){
     return kb;
 }
 
-Node * searchKnowledgeBase(KnowledgeBase * kb, char * intent, char * entity){
+Node * searchKnowledgeBase(KnowledgeBase * kb, const char * intent, const char * entity){
     Node * found = NULL;
     //Search for node corresponding to entity
     if(strcmp("where",intent) == 0) found = findHashTable(kb->whereDict, entity);
@@ -25,7 +25,7 @@ Node * searchKnowledgeBase(KnowledgeBase * kb, char * intent, char * entity){
     return found;
 }
 
-KnowledgeBase * insertKnowledgeBase(KnowledgeBase * kb, char * intent, Node * node){
+KnowledgeBase * insertKnowledgeBase(KnowledgeBase * kb, const char * intent, Node * node){
     if(node==NULL) return kb;
     if(kb == NULL) return NULL;
 

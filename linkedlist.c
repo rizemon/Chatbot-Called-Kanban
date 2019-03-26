@@ -4,12 +4,12 @@
 #include <string.h>
 #include "linkedlist.h"
 
-Node * createNode(char * key, char * content){
+Node * createNode(const char * key, const char * content){
     //Allocate space for a single node
     Node * newNode = (Node *)malloc(sizeof(Node));
     //Save key and content into node
-    strncpy(newNode->original, key, MAX_SIZE);
-    strncpy(newNode->content, content, MAX_SIZE);
+    strncpy(newNode->original, key, MAX_ENTITY);
+    strncpy(newNode->content, content, MAX_RESPONSE);
     for(int i = 0; i < strlen(newNode->original); i++) newNode->key[i] = tolower(newNode->original[i]);
     newNode->key[strlen(newNode->original)] = '\0';
     //Set pointer to next node to NULL
@@ -28,20 +28,20 @@ Node * addNode(Node * headptr, Node * newNode){
     return newNode;
 }
 
-Node * modifyNode(Node * node, char * original, char * content){
+Node * modifyNode(Node * node, const char * original, const char * content){
     if(node == NULL) return NULL;
     //Overwrite content in node
     if(node) {
-        strncpy(node-> content, content, MAX_SIZE);
-        strncpy(node-> original, original, MAX_SIZE);
+        strncpy(node-> content, content, MAX_RESPONSE);
+        strncpy(node-> original, original, MAX_ENTITY);
     }
     return node;
 }
 
-Node * findNode(Node * headptr, char * key){
+Node * findNode(Node * headptr, const char * key){
     
     // Store lowercase version of key
-    char * tempKey = (char *)malloc(sizeof(char) * MAX_SIZE);
+    char * tempKey = (char *)malloc(sizeof(char) * MAX_ENTITY);
     for(int i = 0; i < strlen(key); i++) tempKey[i] = tolower(key[i]);
     tempKey[strlen(key)] = '\0';
 
@@ -53,7 +53,7 @@ Node * findNode(Node * headptr, char * key){
 
 }
 
-Node * innerFindNode(Node * headptr, char * key){
+Node * innerFindNode(Node * headptr, const char * key){
     //Node cannot be found
     if(headptr == NULL) return NULL;
     //If node's key matches
@@ -67,10 +67,10 @@ void freeNode(Node * node){
     free(node);
 }
 
-Node * deleteNode(Node * headptr, char * key){
+Node * deleteNode(Node * headptr, const char * key){
 
     // Store lowercase version of key
-    char * tempKey = (char *)malloc(sizeof(char) * MAX_SIZE);
+    char * tempKey = (char *)malloc(sizeof(char) * MAX_ENTITY);
     for(int i = 0; i < strlen(key); i++) tempKey[i] = tolower(key[i]);
     tempKey[strlen(key)] = '\0';
     
@@ -80,7 +80,7 @@ Node * deleteNode(Node * headptr, char * key){
     return headptr;
 }
 
-Node * innerDeleteNode(Node * headptr, char * key){
+Node * innerDeleteNode(Node * headptr, const char * key){
     if(headptr == NULL) return NULL;
 
     //If head node is to be deleted
@@ -120,11 +120,11 @@ Node * clearAll(Node * headptr){
 }
 
 void getNodeKey(Node * node, char * key){
-    if(node) strncpy(key, node->original, MAX_SIZE);
+    if(node) strncpy(key, node->original, MAX_ENTITY);
 }
 
 void getNodeContent(Node * node, char * content){
-    if(node) strncpy(content, node->content, MAX_SIZE);
+    if(node) strncpy(content, node->content, MAX_RESPONSE);
 }
 
 void printNode(Node * node){

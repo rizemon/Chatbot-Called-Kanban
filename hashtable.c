@@ -6,7 +6,7 @@
 
 //Hash table implementation in C using Seperate Chaining for hash collisions
 
-unsigned long hash_fn(char * str){
+unsigned long hash_fn(const char * str){
     //Hash function using djb2 algorithm
     unsigned long magic_number = 5381;
     int i;
@@ -23,7 +23,7 @@ Node ** createHashTable(){
     return (Node **)malloc(BUCKET_SIZE * sizeof(Node *));
 }
 
-Node * findHashTable(Node ** hashTable, char * key){
+Node * findHashTable(Node ** hashTable, const char * key){
     if(hashTable == NULL) return NULL;
     //Calculate hash
     unsigned long hash = hash_fn(key) % BUCKET_SIZE;
@@ -51,7 +51,7 @@ Node ** insertHashTable(Node ** hashTable, Node * node){
     return hashTable;
 }
 
-Node ** deleteHashTable(Node ** hashTable, char * key){
+Node ** deleteHashTable(Node ** hashTable, const char * key){
     if(hashTable == NULL) return NULL;
     //Calculate hash
     unsigned long hash = hash_fn(key) % BUCKET_SIZE;

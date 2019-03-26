@@ -50,8 +50,6 @@
 /** Global Variable for hashtable containing all the smalltalk phrases*/
 /** Initialise smalltalks variable as NULL*/
 Node ** smalltalks = NULL;
-
-KnowledgeBase * kb = NULL;
  
 /*
  * Get the name of the chatbot.
@@ -95,12 +93,10 @@ int chatbot_main(int inc, char *inv[], char *response, int n) {
     }
 	/* check for empty input */
 	if (inc < 1) {
-		snprintf(response, n, "");
+		snprintf(response, n, "%s","");
 		return 0;
 	}
-	if (kb == NULL){
-		kb = createKnowledgeBase();
-	}
+	knowledge_init();
 	/* look for an intent and invoke the corresponding do_* function */
 	if (chatbot_is_exit(inv[0]))
 		return chatbot_do_exit(inc, inv, response, n);
@@ -292,10 +288,7 @@ int chatbot_is_reset(const char *intent) {
  */
 int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
 	knowledge_reset();
-	char buffer[MAX_RESPONSE];
-	strcpy(buffer, chatbot_botname());
-	strcat(buffer, " resetted");
-	snprintf(response, n, buffer);
+	snprintf(response, n,"%s resetted", chatbot_botname());
 	
 	return 0;
 	 
@@ -410,12 +403,12 @@ int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
     }
     /** If no matching end_phrases found, print smalltalk_response and return 0 to continue catting*/
     if (found == 0) {
-        snprintf(response,  n, smalltalk_response);
+        snprintf(response, n, "%s",smalltalk_response);
         return 0;
     }
     /** If a matching end_phrase was found, print smalltalk_response and return 1 to end the chat*/
     else {
-        snprintf(response,  n, smalltalk_response);
+        snprintf(response,  n, "%s", smalltalk_response);
         return 1;
     }
     

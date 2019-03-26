@@ -1,31 +1,33 @@
+
+
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
-#define MAX_SIZE 256
+#include "chat1002.h"
 
 typedef struct NodeStruct {
-    char key[MAX_SIZE];
-    char original[MAX_SIZE];
-    char content[MAX_SIZE];
+    char key[MAX_ENTITY];
+    char original[MAX_ENTITY];
+    char content[MAX_RESPONSE];
     struct NodeStruct * next;
 }Node;
 
-Node * createNode(char * key, char * content);
+Node * createNode(const char * key, const char * content);
 Node * addNode(Node * headptr, Node * newNode);
-Node * findNode(Node * headptr, char * key);
-Node * deleteNode(Node * headptr, char * key);
+Node * findNode(Node * headptr, const char * key);
+Node * deleteNode(Node * headptr, const char * key);
 
 Node * clearAll(Node * headptr);
 void printAll(Node * headptr);
 
-Node * modifyNode(Node * node, char * original, char * content);
+Node * modifyNode(Node * node, const char * original, const char * content);
 void freeNode(Node * node);
 void printNode(Node * node);
 
 void getNodeKey(Node * node, char * key);
 void getNodeContent(Node * node, char * content);
 
-Node * innerDeleteNode(Node * headptr, char * key);
-Node * innerFindNode(Node * headptr, char * key);
+Node * innerDeleteNode(Node * headptr, const char * key);
+Node * innerFindNode(Node * headptr, const char * key);
 
 #endif

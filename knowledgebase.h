@@ -14,8 +14,8 @@ typedef struct KnowledgeBaseStruct {
 }KnowledgeBase;
 
 KnowledgeBase * createKnowledgeBase();
-Node * searchKnowledgeBase(KnowledgeBase * kb, char * intent, char * entity);
-KnowledgeBase * insertKnowledgeBase(KnowledgeBase * kb, char * intent, Node * node);
+Node * searchKnowledgeBase(KnowledgeBase * kb, const char * intent, const char * entity);
+KnowledgeBase * insertKnowledgeBase(KnowledgeBase * kb, const char * intent, Node * node);
 KnowledgeBase * clearKnowledgeBase(KnowledgeBase * kb);
 
 #endif
