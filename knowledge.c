@@ -185,41 +185,51 @@ void knowledge_reset() {
  *   f - the file
  */
 void knowledge_write(FILE *f) {
-	
-    FILE * fp = fopen("./knowledgebase.ini","w");
-    Node * temp = NULL;
 
-    fprintf(fp, "%s\r\n", "[what]");
+    Node * temp = NULL;
+    int writeHeading = 1;
 
     for(int i = 0; i < BUCKET_SIZE; i++){
         temp = kb->whatDict[i];
         while(temp != NULL){
-            fprintf(fp, "%s=%s\r\n", getNodeKey(temp), getNodeContent(temp));
+            
+            if(writeHeading){
+                fprintf(f, "%s\r\n", "[what]");
+                writeHeading = 0;
+            }
+            fprintf(f, "%s=%s\r\n", getNodeKey(temp), getNodeContent(temp));
             temp = temp->next;
         }
     }
 
-    fprintf(fp, "\r\n%s\r\n", "[where]");
+    writeHeading = 1;
 
     for(int i = 0; i < BUCKET_SIZE; i++){
         temp = kb->whereDict[i];
         while(temp != NULL){
-            fprintf(fp, "%s=%s\r\n", getNodeKey(temp), getNodeContent(temp));
+            if(writeHeading){
+                fprintf(f, "\r\n%s\r\n", "[where]");
+                writeHeading = 0;
+            }
+            fprintf(f, "%s=%s\r\n", getNodeKey(temp), getNodeContent(temp));
             temp = temp->next;
         }
     }
-
-    fprintf(fp, "\r\n%s\r\n", "[who]");
+    writeHeading = 1;
 
     for(int i = 0; i < BUCKET_SIZE; i++){
         temp = kb->whoDict[i];
         while(temp != NULL){
-            fprintf(fp, "%s=%s\r\n", getNodeKey(temp), getNodeContent(temp));
+            if(writeHeading){
+                fprintf(f, "\r\n%s\r\n", "[who]");
+                writeHeading = 0;
+            }
+            fprintf(f, "%s=%s\r\n", getNodeKey(temp), getNodeContent(temp));
             temp = temp->next;
         }
     }
 
-    fclose(fp);
+
     
 	/* to be implemented */
 	
