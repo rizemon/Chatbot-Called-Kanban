@@ -122,8 +122,8 @@ int knowledge_read(FILE *f) {
 	int lines_read = 0;
 
 	char line[MAX_ENTITY + 1 + MAX_RESPONSE + 1];
-	char sectionHeading[MAX_INTENT+2];
-    char intent[MAX_INTENT+2];
+	char sectionHeading[MAX_INTENT];
+    char intent[MAX_INTENT];
 
     char entity[MAX_ENTITY];
     char response[MAX_RESPONSE];
@@ -136,15 +136,15 @@ int knowledge_read(FILE *f) {
         // If empty line, ignore
         if(strlen(line) == 0) continue;
 
-        // Find section heading
-        strcpy(sectionHeading, findIntent(line));
+        // Find potential section heading and save it
+        snprintf(sectionHeading, MAX_INTENT, "%s", findIntent(line) );
 
         // If section heading is found in buff
         if(strlen(sectionHeading) != 0){
             // If section heading is an invalid intent, set intent to ""
-            if(strcmp(sectionHeading, "[]") == 0) strcpy(intent, "");
+            if(strcmp(sectionHeading, "[]") == 0) snprintf(intent, MAX_INTENT, "%s", "");
             // else section heading is a valid intent, set intent to section heading
-            else strcpy(intent, sectionHeading);
+            else snprintf(intent, MAX_INTENT, "%s", sectionHeading );
         
         // buff is entity/response pair
         }else{
