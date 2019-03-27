@@ -20,7 +20,12 @@ unsigned long hash_fn(const char * str){
 
 Node ** createHashTable(){
     //Allocate array of linked lists
-    return (Node **)malloc(BUCKET_SIZE * sizeof(Node *));
+    Node ** newTable = (Node **)malloc(BUCKET_SIZE * sizeof(Node *));
+    //Initialize head pointer of each linked list to NULL
+    for(int i = 0; i < BUCKET_SIZE; i++){
+        newTable[i] = NULL;
+    }
+    return newTable;
 }
 
 Node * findHashTable(Node ** hashTable, const char * key){

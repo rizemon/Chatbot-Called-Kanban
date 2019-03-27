@@ -39,8 +39,11 @@ KnowledgeBase * insertKnowledgeBase(KnowledgeBase * kb, const char * intent, Nod
 KnowledgeBase * clearKnowledgeBase(KnowledgeBase * kb){
     if(kb == NULL) return NULL;
     //Free each dictionary
+
     kb->whereDict = clearHashTable(kb->whereDict);
     kb->whatDict = clearHashTable(kb->whatDict);
     kb->whoDict = clearHashTable(kb->whoDict);
-    return kb;
+
+    free(kb);
+    return NULL;
 }
