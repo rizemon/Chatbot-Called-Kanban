@@ -24,8 +24,8 @@ Node * modifyNode(Node * node, const char * original, const char * content);
 void freeNode(Node * node);
 void printNode(Node * node);
 
-void getNodeKey(Node * node, char * key);
-void getNodeContent(Node * node, char * content);
+char * getNodeKey(Node * node);
+char * getNodeContent(Node * node);
 
 Node * innerDeleteNode(Node * headptr, const char * key);
 Node * innerFindNode(Node * headptr, const char * key);

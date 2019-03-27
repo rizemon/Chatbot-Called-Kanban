@@ -8,8 +8,8 @@ Node * createNode(const char * key, const char * content){
     //Allocate space for a single node
     Node * newNode = (Node *)malloc(sizeof(Node));
     //Save key and content into node
-    strncpy(newNode->original, key, MAX_ENTITY);
-    strncpy(newNode->content, content, MAX_RESPONSE);
+    snprintf(newNode->original, MAX_ENTITY, "%s", key);
+    snprintf(newNode->content, MAX_RESPONSE, "%s", content);
     for(int i = 0; i < strlen(newNode->original); i++) newNode->key[i] = tolower(newNode->original[i]);
     newNode->key[strlen(newNode->original)] = '\0';
     //Set pointer to next node to NULL
@@ -32,8 +32,8 @@ Node * modifyNode(Node * node, const char * original, const char * content){
     if(node == NULL) return NULL;
     //Overwrite content in node
     if(node) {
-        strncpy(node-> content, content, MAX_RESPONSE);
-        strncpy(node-> original, original, MAX_ENTITY);
+        snprintf(node-> content, MAX_RESPONSE, "%s", content);
+        snprintf(node-> original, MAX_ENTITY, "%s", original);
     }
     return node;
 }
@@ -119,12 +119,12 @@ Node * clearAll(Node * headptr){
     return NULL;
 }
 
-void getNodeKey(Node * node, char * key){
-    if(node) strncpy(key, node->original, MAX_ENTITY);
+char * getNodeKey(Node * node){
+    return node->original;
 }
 
-void getNodeContent(Node * node, char * content){
-    if(node) strncpy(content, node->content, MAX_RESPONSE);
+char * getNodeContent(Node * node){
+    return node->content;
 }
 
 void printNode(Node * node){

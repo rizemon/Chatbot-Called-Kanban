@@ -184,6 +184,8 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 	
 	/* to be implemented */
 
+	// int lines_read = knowledge_read(fp);
+
 	return 0;
 	 
 }
@@ -326,7 +328,8 @@ int chatbot_is_save(const char *intent) {
  */
 int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 	
-	/* to be implemented */
+
+	// knowledge_write(fp);
 	
 	return 0;
 	 

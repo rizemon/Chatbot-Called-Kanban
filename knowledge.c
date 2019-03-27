@@ -46,7 +46,7 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 	if(found == NULL){
 		return KB_NOTFOUND;
 	}else{
-		getNodeContent(found, response);
+        snprintf(response, n, "%s", getNodeContent(found));
         return KB_OK;
 	}
 
@@ -150,11 +150,11 @@ int knowledge_read(FILE *f) {
         }else{
             //Split into entity and response
             splitEntityResponse(line, entity, response);
-            //If there is a reponse
+            //If there is a response
             if(strlen(response) > 0){
                 // If valid intent, increment lines_read
 				if (strcmp(intent,"") != 0) lines_read++;
-				// If valid intent, save entity and response
+				// For each valid intent, save entity and response
                 if (strcmp(intent, "what") == 0) kb = insertKnowledgeBase(kb , "what", createNode(entity,response));
                 if (strcmp(intent, "where") == 0) kb = insertKnowledgeBase(kb , "where", createNode(entity,response));
                 if (strcmp(intent, "who") == 0) kb = insertKnowledgeBase(kb , "who", createNode(entity,response));
@@ -186,6 +186,41 @@ void knowledge_reset() {
  */
 void knowledge_write(FILE *f) {
 	
+    FILE * fp = fopen("./knowledgebase.ini","w");
+    Node * temp = NULL;
+
+    fprintf(fp, "%s\r\n", "[what]");
+
+    for(int i = 0; i < BUCKET_SIZE; i++){
+        temp = kb->whatDict[i];
+        while(temp != NULL){
+            fprintf(fp, "%s=%s\r\n", getNodeKey(temp), getNodeContent(temp));
+            temp = temp->next;
+        }
+    }
+
+    fprintf(fp, "\r\n%s\r\n", "[where]");
+
+    for(int i = 0; i < BUCKET_SIZE; i++){
+        temp = kb->whereDict[i];
+        while(temp != NULL){
+            fprintf(fp, "%s=%s\r\n", getNodeKey(temp), getNodeContent(temp));
+            temp = temp->next;
+        }
+    }
+
+    fprintf(fp, "\r\n%s\r\n", "[who]");
+
+    for(int i = 0; i < BUCKET_SIZE; i++){
+        temp = kb->whoDict[i];
+        while(temp != NULL){
+            fprintf(fp, "%s=%s\r\n", getNodeKey(temp), getNodeContent(temp));
+            temp = temp->next;
+        }
+    }
+
+    fclose(fp);
+    
 	/* to be implemented */
 	
 }
