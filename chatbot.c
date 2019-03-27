@@ -225,34 +225,36 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	char *intent = inv[0];
 	char entity[MAX_ENTITY];
 	char removed[MAX_ENTITY];
+
+	int entitylen = 0;
+
 	for(int i = 1; i<inc; i++){
 		if(i == 1){
 		//If 1st word is "is" or "are"
 			if(compare_token(inv[i], "is") == 0 || compare_token(inv[i], "are") == 0 ){
-				//Store removed word
-				strcpy(removed, inv[i]);
+				//Store removed word in between spaces
+				snprintf(removed, MAX_ENTITY, " %s ", inv[i]);
 				//Initialize entity to blank
-				strcpy(entity,"");
+				entitylen += snprintf(entity+entitylen, MAX_ENTITY-entitylen, "%s", "");
 
 		//If 1st word is not "is" or "are"
 			}else{
-				//Set removed to blank
-				strcpy(removed, "");
+				//Set removed to a space
+				snprintf(removed, MAX_ENTITY, "%s", " ");
 				//Initialize entity to first word
-				strcpy(entity, inv[i]);
+				entitylen += snprintf(entity+entitylen, MAX_ENTITY-entitylen, "%s", inv[i]);
 			}
 		}else{
 		//2nd words onwards are accumulated
-			if(strcmp(entity, "") != 0) strcat(entity, " ");
-			strcat(entity, inv[i]);
+			if(strcmp(entity, "") != 0) entitylen += snprintf(entity + entitylen, MAX_ENTITY-entitylen," %s", inv[i]);
+			else entitylen += snprintf(entity + entitylen, MAX_ENTITY-entitylen,"%s", inv[i]);
 			
 		}
 	}
 
-	printf("[DEBUG]Entity:%s\n",entity);
 	if(knowledge_get(intent, entity, response, n) == KB_NOTFOUND){
 		char answer[MAX_RESPONSE];
-		prompt_user(answer, n,"I don't know. %s %s %s?",intent,removed,entity);
+		prompt_user(answer, n,"I don't know. %s%s%s?",intent,removed,entity);
 		knowledge_put(intent,entity, answer);
 		snprintf(response, n, "Thank you");	
 
