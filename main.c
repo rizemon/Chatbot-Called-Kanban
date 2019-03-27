@@ -44,8 +44,14 @@ int main(int argc, char *argv[]) {
 		do {
 			/* read the line */
 			printf("%s: ", chatbot_username());
-			fgets(input, MAX_INPUT, stdin);
 			
+			fgets(input, MAX_INPUT, stdin);
+
+			/* If the newline is not stored in "input", that means a newline still exist
+			in the stdin. If so, pop from stdin until newline is removed*/
+			if(!strchr(input, '\n')) while ( getchar() != '\n' );
+
+
 			/* split it into words */
 			inc = 0;
 			inv[inc] = strtok(input, delimiters);
@@ -130,4 +136,8 @@ void prompt_user(char *buf, int n, const char *format, ...) {
 	char *nl = strchr(buf, '\n');
 	if (nl != NULL)
 		*nl = '\0';
+	else
+		/* If newline cannot be found in buf, that means a newline still exist
+		in the stdin. If so, pop from stdin until newline is removed */
+		while ( getchar() != '\n' );
 }
