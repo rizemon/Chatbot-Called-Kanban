@@ -6,7 +6,7 @@
 #define BUCKET_SIZE 1001
 unsigned long hash_fn(const char * str);
 
-Node ** createHashTable();
+Node ** createHashTable(void);
 Node * findHashTable(Node ** hashTable, const char * key);
 Node ** insertHashTable(Node ** hashTable, Node * node);
 Node ** deleteHashTable(Node ** hashTable, const char * key);

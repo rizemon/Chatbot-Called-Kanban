@@ -181,13 +181,31 @@ int chatbot_is_load(const char *intent) {
  *   0 (the chatbot always continues chatting after loading knowledge)
  */
 int chatbot_do_load(int inc, char *inv[], char *response, int n) {
-	
-	/* to be implemented */
+    /** Stores the number of responses read from a given file
+    *   Sets this value to 0
+    */
+    int no_of_responses_read = 0;
+    char filename[MAX_RESPONSE];
 
-	// int lines_read = knowledge_read(fp);
-
-	return 0;
-	 
+    /** Copies the second item from the char *array inv[],FILENAME from the command Load FILENAME*/
+    strcpy(filename, inv[1]);
+    /** Open the given file for reading*/
+    FILE * file = fopen(filename, "r");
+    
+    /** Checks if file open was successfully executed, otherwise print the error*/
+    if (file == NULL) {
+        perror("fopen");
+    }
+    else {
+        /** Knowledge_read reads the given file, and loads current knowledge base with given file, returning the no of valid lines read */
+        no_of_responses_read = knowledge_read(file);
+        /** Closes the file */
+        fclose(file);
+        /** Prints no of responses read onto the buffer*/
+        snprintf(response, n, "Read %d responses from %s", no_of_responses_read,inv[1]);
+    }
+    /** Always return 0 to continue chatting after loading knowledge */
+    return 0;
 }
 
 
@@ -329,12 +347,25 @@ int chatbot_is_save(const char *intent) {
  *   0 (the chatbot always continues chatting after saving knowledge)
  */
 int chatbot_do_save(int inc, char *inv[], char *response, int n) {
-	
-
-	// knowledge_write(fp);
-	
-	return 0;
-	 
+    
+    char filename[MAX_RESPONSE];
+    /** Copies the 3rd item from the char *array inv[],FILENAME from the command Save as FILENAME*/
+    strcpy(filename, inv[2]);
+    /** Open the given file for reading*/
+    FILE * file = fopen(filename, "w");
+    
+    /** Checks if file open was successfully executed, otherwise print the error*/
+    if (file == NULL) {
+        perror("fopen");
+    }
+    else {
+        knowledge_write(file);
+        /** Closes the file */
+        fclose(file);
+        /** Prints confirmation message of do_save onto the buffer*/
+        snprintf(response, n, "My knowledge has been saved to %s.", inv[2]);
+    }
+    return 0;
 }
 
 /** This function creates a hashtable filled with smalltalk nodes that store key value pairs of smalltalk intent and response respectively
