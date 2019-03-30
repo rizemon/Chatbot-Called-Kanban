@@ -22,6 +22,7 @@
 /* the maximum number of characters allowed in a response (including the terminating null) */
 #define MAX_RESPONSE 256
 
+
 /* return codes for knowledge_get() and knowledge_put() */
 #define KB_OK        0
 #define KB_NOTFOUND -1
@@ -62,5 +63,7 @@ void knowledge_init();
 int startWith(char buffer[], char prefix[]);
 const char * findIntent(char buffer[]);
 void splitEntityResponse(char buffer[], char * entity, char * response);
+int compare_ignorelist(char * word, char * ignorelist[], int ignorelistsize);
+void getEntity(int inc, char *inv[], char * ignorelist[], int ignorelistsize, char * entity, char * removed);
 
 #endif

@@ -185,16 +185,18 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
     *   Sets this value to 0
     */
     int no_of_responses_read = 0;
-    char filename[MAX_RESPONSE];
+    char filename[MAX_ENTITY];
+    char removed[MAX_ENTITY];
+    char * ignorelist[] = {"from"};
 
-    /** Copies the second item from the char *array inv[],FILENAME from the command Load FILENAME*/
-    strcpy(filename, inv[1]);
+	getEntity(inc, inv, ignorelist, 1, filename, removed);
+
     /** Open the given file for reading*/
     FILE * file = fopen(filename, "r");
     
     /** Checks if file open was successfully executed, otherwise print the error*/
     if (file == NULL) {
-        perror("fopen");
+        snprintf(response, n, "%s does not exist",filename);
     }
     else {
         /** Knowledge_read reads the given file, and loads current knowledge base with given file, returning the no of valid lines read */
@@ -202,7 +204,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
         /** Closes the file */
         fclose(file);
         /** Prints no of responses read onto the buffer*/
-        snprintf(response, n, "Read %d responses from %s", no_of_responses_read,inv[1]);
+        snprintf(response, n, "Read %d responses from %s", no_of_responses_read,filename);
     }
     /** Always return 0 to continue chatting after loading knowledge */
     return 0;
@@ -242,33 +244,10 @@ int chatbot_is_question(const char *intent) {
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	char *intent = inv[0];
 	char entity[MAX_ENTITY];
-	char removed[MAX_ENTITY];
+    char removed[MAX_ENTITY];
+    char * ignorelist[] = {"is","are"};
 
-	int entitylen = 0;
-
-	for(int i = 1; i<inc; i++){
-		if(i == 1){
-		//If 1st word is "is" or "are"
-			if(compare_token(inv[i], "is") == 0 || compare_token(inv[i], "are") == 0 ){
-				//Store removed word in between spaces
-				snprintf(removed, MAX_ENTITY, " %s ", inv[i]);
-				//Initialize entity to blank
-				entitylen += snprintf(entity+entitylen, MAX_ENTITY-entitylen, "%s", "");
-
-		//If 1st word is not "is" or "are"
-			}else{
-				//Set removed to a space
-				snprintf(removed, MAX_ENTITY, "%s", " ");
-				//Initialize entity to first word
-				entitylen += snprintf(entity+entitylen, MAX_ENTITY-entitylen, "%s", inv[i]);
-			}
-		}else{
-		//2nd words onwards are accumulated
-			if(strcmp(entity, "") != 0) entitylen += snprintf(entity + entitylen, MAX_ENTITY-entitylen," %s", inv[i]);
-			else entitylen += snprintf(entity + entitylen, MAX_ENTITY-entitylen,"%s", inv[i]);
-			
-		}
-	}
+	getEntity(inc, inv, ignorelist, 2, entity, removed);
 
 	if(knowledge_get(intent, entity, response, n) == KB_NOTFOUND){
 		char answer[MAX_RESPONSE];
@@ -356,22 +335,26 @@ int chatbot_is_save(const char *intent) {
  */
 int chatbot_do_save(int inc, char *inv[], char *response, int n) {
     
-    char filename[MAX_RESPONSE];
-    /** Copies the 3rd item from the char *array inv[],FILENAME from the command Save as FILENAME*/
-    strcpy(filename, inv[2]);
+    int no_of_responses_read = 0;
+    char filename[MAX_ENTITY];
+    char removed[MAX_ENTITY];
+    char * ignorelist[] = {"as","to"};
+
+	getEntity(inc, inv, ignorelist, 2, filename, removed);
+
     /** Open the given file for reading*/
     FILE * file = fopen(filename, "w");
     
     /** Checks if file open was successfully executed, otherwise print the error*/
     if (file == NULL) {
-        perror("fopen");
+        snprintf(response, n, "%s could not be created.",filename);
     }
     else {
         knowledge_write(file);
         /** Closes the file */
         fclose(file);
         /** Prints confirmation message of do_save onto the buffer*/
-        snprintf(response, n, "My knowledge has been saved to %s.", inv[2]);
+        snprintf(response, n, "My knowledge has been saved to %s.", filename);
     }
     return 0;
 }
@@ -457,4 +440,39 @@ int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
     }
     
 }
-  
+
+int compare_ignorelist(char * word, char * ignorelist[], int ignorelistsize){
+    for(int i = 0; i < ignorelistsize; i++ ){
+        if(compare_token(word, ignorelist[i]) == 0){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
+void getEntity(int inc, char *inv[], char * ignorelist[], int ignorelistsize, char entity[], char removed[]){
+	int entitylen = 0;
+
+	for(int i = 1; i<inc; i++){
+		if(i == 1){
+            if(compare_ignorelist(inv[i], ignorelist, ignorelistsize)){
+                //Store removed word in between spaces
+				snprintf(removed, MAX_ENTITY, " %s ", inv[i]);
+				//Initialize entity to blank
+				entitylen += snprintf(entity+entitylen, MAX_ENTITY-entitylen, "%s", "");
+			}else{
+				//Set removed to a space
+				snprintf(removed, MAX_ENTITY, "%s", " ");
+				//Initialize entity to first word
+				entitylen += snprintf(entity+entitylen, MAX_ENTITY-entitylen, "%s", inv[i]);
+			}
+		}else{
+		//2nd words onwards are accumulated
+			if(strcmp(entity, "") != 0) entitylen += snprintf(entity + entitylen, MAX_ENTITY-entitylen," %s", inv[i]);
+			else entitylen += snprintf(entity + entitylen, MAX_ENTITY-entitylen,"%s", inv[i]);
+		}
+	}
+
+
+}
