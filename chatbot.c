@@ -273,8 +273,16 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	if(knowledge_get(intent, entity, response, n) == KB_NOTFOUND){
 		char answer[MAX_RESPONSE];
 		prompt_user(answer, n,"I don't know. %s%s%s?",intent,removed,entity);
-		knowledge_put(intent,entity, answer);
-		snprintf(response, n, "Thank you");	
+        if(!isspace(*answer)){
+            if(strlen(answer) != 0){
+                knowledge_put(intent,entity, answer);
+                snprintf(response, n, "Thank you"); 
+            }else{
+                snprintf(response, n, ":-("); 
+            }
+        }else{
+            snprintf(response, n, ":-("); 
+        }
 
 	}
 	return 0;
