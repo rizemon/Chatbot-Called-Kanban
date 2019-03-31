@@ -417,7 +417,7 @@ int chatbot_is_smalltalk(const char *intent) {
 int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
     char *intent = inv[0];
     char *smalltalk_response = findHashTable(smalltalks, intent)->content;
-    char end_phrases[][10] = {"bye", "goodbye"};
+    char * end_phrases[] = {"bye", "goodbye"};
     int index, str_cmp, found= 0;
     /* Check if intent is any of the ending phrases */
     for(index = 0; index < sizeof(end_phrases) / sizeof(char *); index++)

@@ -228,10 +228,6 @@ void knowledge_write(FILE *f) {
             temp = temp->next;
         }
     }
-
-
-    
-	/* to be implemented */
 	
 }
 
