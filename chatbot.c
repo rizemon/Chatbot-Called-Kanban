@@ -227,7 +227,6 @@ int chatbot_is_question(const char *intent) {
 	
 }
 
-
 /*
  * Answer a question.
  *
@@ -242,6 +241,7 @@ int chatbot_is_question(const char *intent) {
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
+    char *trim();
 	char *intent = inv[0];
 	char entity[MAX_ENTITY];
     char removed[MAX_ENTITY];
@@ -252,17 +252,13 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	if(knowledge_get(intent, entity, response, n) == KB_NOTFOUND){
 		char answer[MAX_RESPONSE];
 		prompt_user(answer, n,"I don't know. %s%s%s?",intent,removed,entity);
-        if(!isspace(*answer)){
-            if(strlen(answer) != 0){
-                knowledge_put(intent,entity, answer);
-                snprintf(response, n, "Thank you"); 
-            }else{
-                snprintf(response, n, ":-("); 
-            }
+        char *filter = trim(answer);
+        if(strlen(filter) != 0){
+            knowledge_put(intent,entity, filter);
+            snprintf(response, n, "Thank you"); 
         }else{
             snprintf(response, n, ":-("); 
         }
-
 	}
 	return 0;
 }
@@ -441,6 +437,36 @@ int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
     
 }
 
+/*
+ * Removes trailing and leading whitespaces from a char array
+ *
+ * Input:
+ *  *str - The string 
+ *
+ * Returns:
+ *  The String with trailing and leading whitespaces removed
+ */
+char *trim(char *inputStr)
+{
+    char *endStr;
+
+    // Trim leading space
+    while(isspace((unsigned char)*inputStr)){
+        inputStr++;
+    }
+
+    // Trim trailing space
+    endStr = inputStr + strlen(inputStr) - 1;
+    while(endStr > inputStr && isspace((unsigned char)*endStr)) {
+        endStr--;
+    }
+
+    // Write new null terminator character
+    endStr[1] = '\0';
+
+    return inputStr;
+}
+
 int compare_ignorelist(char * word, char * ignorelist[], int ignorelistsize){
     for(int i = 0; i < ignorelistsize; i++ ){
         if(compare_token(word, ignorelist[i]) == 0){
@@ -476,3 +502,5 @@ void getEntity(int inc, char *inv[], char * ignorelist[], int ignorelistsize, ch
 
 
 }
+
+
