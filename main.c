@@ -6,6 +6,16 @@
  * You should not need to modify this file. You may invoke its functions if you like, however.
  */
 
+/*
+ * Changes made to main.c:
+ *
+ * int main(): Lines 60-62
+ * void prompt_user(): Lines 149-152
+ * Ctrl-F and search for [ADDED] to jump to the modified portions
+ * 
+ */
+
+
 #include <ctype.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -47,8 +57,8 @@ int main(int argc, char *argv[]) {
 			
 			fgets(input, MAX_INPUT, stdin);
 
-			/* If the newline is not stored in "input", that means a newline still exist
-			in the stdin. If so, pop from stdin until newline is removed*/
+			/* [ADDED] If the newline is not stored in "input", that means a newline still exist
+			in the stdin. If so, pop from stdin until newline is removed [ADDED]*/
 			if(!strchr(input, '\n')) while ( getchar() != '\n' );
 
 
@@ -137,7 +147,7 @@ void prompt_user(char *buf, int n, const char *format, ...) {
 	if (nl != NULL)
 		*nl = '\0';
 	else
-		/* If newline cannot be found in buf, that means a newline still exist
-		in the stdin. If so, pop from stdin until newline is removed */
+		/* [ADDED] If newline cannot be found in buf, that means a newline still exist
+		in the stdin. If so, pop from stdin until newline is removed [ADDED] */
 		while ( getchar() != '\n' );
 }
