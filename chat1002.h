@@ -60,6 +60,7 @@ void knowledge_write(FILE *f);
 
 void knowledge_init();
 
+char * trim();
 int startWith(char buffer[], char prefix[]);
 const char * findIntent(char buffer[]);
 void splitEntityResponse(char buffer[], char * entity, char * response);

@@ -241,7 +241,6 @@ int chatbot_is_question(const char *intent) {
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
-    char *trim();
 	char *intent = inv[0];
 	char entity[MAX_ENTITY];
     char removed[MAX_ENTITY];
