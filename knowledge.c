@@ -20,6 +20,7 @@
 #include "hashtable.h"
 #include "knowledgebase.h"
 
+// Declare a global scope knowledge base
 KnowledgeBase * kb = NULL;
 
 /*
@@ -44,6 +45,7 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 	else if(compare_token(intent, "where") == 0) found = searchKnowledgeBase(kb, "where", entity);
 	// Else if intent matches with the word "who", search who knowledge base for entity.
 	else if(compare_token(intent, "who") == 0) found = searchKnowledgeBase(kb, "who", entity);
+    // Else intent is invalid.
 	else return KB_INVALID;
 	
 	if(found == NULL){
@@ -133,14 +135,28 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
  * Returns: the number of entity/response pairs successful read from the file
  */
 int knowledge_read(FILE *f) {
-	
+	// Number of entity/response pairs read
 	int lines_read = 0;
 
+    // Holds contents of a single line in the file
 	char line[MAX_ENTITY + 1 + MAX_RESPONSE + 1];
+
+    // Holds the found intent in a line 
+    // Empty if line is a possible entity/response pair, 
+    // "[]" if line is a invalid section heading, 
+    // "what" or "who" or "where" if line is a valid intent
 	char sectionHeading[MAX_INTENT];
+
+    // Holds the current intent (e.g "what", "where", "who")
+    // to insert the entity/response pair under. If invalid
+    // section heading, set this to "".
     char intent[MAX_INTENT];
 
+    // Holds the entity of a entity/response pair line
     char entity[MAX_ENTITY];
+
+    // Holds the response of a entity/response pair line.
+    // If empty, means invalid entity/response line
     char response[MAX_RESPONSE];
 
 
@@ -154,14 +170,14 @@ int knowledge_read(FILE *f) {
         // Find potential section heading and save it
         snprintf(sectionHeading, MAX_INTENT, "%s", findIntent(line) );
 
-        // If section heading is found in buff
+        // Check if section heading is found in line
         if(strlen(sectionHeading) != 0){
             // If section heading is an invalid intent, set intent to ""
             if(strcmp(sectionHeading, "[]") == 0) snprintf(intent, MAX_INTENT, "%s", "");
             // else section heading is a valid intent, set intent to section heading
             else snprintf(intent, MAX_INTENT, "%s", sectionHeading );
         
-        // buff is entity/response pair
+        // line is entity/response pair
         }else{
             //Split into entity and response
             splitEntityResponse(line, entity, response);
@@ -189,7 +205,6 @@ int knowledge_read(FILE *f) {
  */
 void knowledge_reset() {
 	kb = clearKnowledgeBase(kb);
-	
 }
 
 
@@ -200,69 +215,135 @@ void knowledge_reset() {
  *   f - the file
  */
 void knowledge_write(FILE *f) {
-
+    // Holds the current node being read from the knowledge base
     Node * temp = NULL;
+
+    // Holds the boolean on whether to write the section heading to the file
     int writeHeading = 1;
 
+    // Loop through each slot in the whatDict hash table
     for(int i = 0; i < BUCKET_SIZE; i++){
+        // Update temp to head pointer at the current slot
         temp = kb->whatDict[i];
+        // Loop through each node in the linked list
         while(temp != NULL){
-            
+            // If there is at least one node in the hash table and heading is not written yet
             if(writeHeading){
+                // Write heading
                 fprintf(f, "%s\r\n", "[what]");
+                // Stop writing heading from next node onwards
                 writeHeading = 0;
             }
+            // Write entity/response pair
             fprintf(f, "%s=%s\r\n", getNodeKey(temp), getNodeContent(temp));
+            // Increment to next node
             temp = temp->next;
         }
     }
 
+    // Reset to write section heading to file
     writeHeading = 1;
 
+    // Loop through each slot in the whereDict hash table
     for(int i = 0; i < BUCKET_SIZE; i++){
+        // Update temp to head pointer at the current slot
         temp = kb->whereDict[i];
+        // Loop through each node in the linked list
         while(temp != NULL){
+            // If there is at least one node in the hash table and heading is not written yet
             if(writeHeading){
+                // Write heading
                 fprintf(f, "\r\n%s\r\n", "[where]");
+                // Stop writing heading from next node onwards
                 writeHeading = 0;
             }
+            // Write entity/response pair
             fprintf(f, "%s=%s\r\n", getNodeKey(temp), getNodeContent(temp));
+            // Increment to next node
             temp = temp->next;
         }
     }
+
+    // Reset to write section heading to file
     writeHeading = 1;
 
+    // Loop through each slot in the whoDict hash table
     for(int i = 0; i < BUCKET_SIZE; i++){
+        // Update temp to head pointer at the current slot
         temp = kb->whoDict[i];
+        // Loop through each node in the linked list
         while(temp != NULL){
+            // If there is at least one node in the hash table and heading is not written yet
             if(writeHeading){
+                // Write heading
                 fprintf(f, "\r\n%s\r\n", "[who]");
+                // Stop writing heading from next node onwards
                 writeHeading = 0;
             }
+            // Write entity/response pair
             fprintf(f, "%s=%s\r\n", getNodeKey(temp), getNodeContent(temp));
+            // Increment to next node
             temp = temp->next;
         }
     }
 	
 }
 
+/*
+ * Initialize global knowledgebase if done so or already resetted
+ */
+void knowledge_init(){
+    if (kb == NULL) kb = createKnowledgeBase();
+}
+
+
+/*
+ * Checks whether a string starts with a given prefix
+ *
+ * Input:
+ *   buffer   - the string to check on
+ *   prefix   - the prefix
+ *
+ * Returns:
+ *   0, if prefix not found at the start of the prefix
+ *   1, if prefix is found at the start of the prefix
+ */
 int startWith(char buffer[], char prefix[]){
     int i = 0;
 
+    // Loop through each character in both buffer and prefix until the end of one of them
     while(buffer[i] != '\0' && prefix[i] != '\0'){
+        // If one of the character don't match, return false
         if(toupper(prefix[i]) != toupper(buffer[i])) return 0;
+        // Increment to next character
         i++;
     }
+    // If reached the end of prefix, return true
     if(prefix[i] == '\0') return 1;
+    // Else return false
     return 0;
 
 }
 
+
+/*
+ * Extract the possible intent in a given line
+ *
+ * Input:
+ *   buffer   - the given line
+ *
+ * Returns:
+ *   "", if line is a possible entity/response pair
+ *   "[]", if line is a invalid section heading
+ *   "what", if line is the "what" section heading
+ *   "where", if line is the "where" section heading
+ *   "who", if line is the "who" section heading
+ */
 const char * findIntent(char buffer[]){
-    // If does not start with "[", means it is a line
+    // If does not start with "[", means it is a possible entity/response pair
     if(buffer[0] != '[') return "";
 
-    // If start with [what], [where], [who], return what, where, who
+    // If start with [what], [where], [who], return "what", "where", "who"
     if(startWith(buffer, "[what]")) return "what";
     if(startWith(buffer, "[where]")) return "where";
     if(startWith(buffer, "[who]")) return "who";
@@ -270,29 +351,42 @@ const char * findIntent(char buffer[]){
     // Check if section heading 
     for(int i = 1; i < strlen(buffer); i++) if (buffer[i] == ']') return "[]";
 
-    // It is a line
+    // it is a possible entity/response pair
     return "";
 }
 
 
+/*
+ * Extact the entity and response from a given line
+ *
+ * Input:
+ *   buffer   - the given line
+ *   entity   - a buffer to receive the entity
+ *   response - a buffer to receive the response
+ */
 void splitEntityResponse(char buffer[], char * entity, char * response){
+    // Next index in entity to place the character 
     int entityidx = 0;
+    // Next index in response to place the character 
     int responseidx = 0;
 
+    // Holds the boolean on whether to start inserting response
     int delimited = 0;
 
+    // Loop through each character in the given line
     for(int i = 0; i < strlen(buffer); i++){
+        // If current character is '=' and still inserting into entity
         if(buffer[i] == '=' && delimited == 0){
+            // Stop inserting into entity, start inserting into response
             delimited = 1;
         }else{
+            //If still inserting into entity
             if(delimited == 0) entity[entityidx++] = buffer[i];
+            //If started inserting into response
             else response[responseidx++] = buffer[i];
         }
     }
+    //Terminate both entity and response
     entity[entityidx] = '\0';
     response[responseidx] = '\0';
 } 
-
-void knowledge_init(){
-    if (kb == NULL) kb = createKnowledgeBase();
-}

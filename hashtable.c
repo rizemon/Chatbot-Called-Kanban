@@ -1,11 +1,23 @@
+/*
+ * Hash table implementation using Seperate Chaining for hash collisions
+ */
+
+
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #include "hashtable.h"
 
-//Hash table implementation in C using Seperate Chaining for hash collisions
 
+/*
+ * Compute a large hash value from a given string
+ *
+ * Input:
+ *   str      - the given string
+ *
+ * Returns: a large number used for computing the slot
+ */
 unsigned long hash_fn(const char * str){
     //Hash function using djb2 algorithm
     unsigned long magic_number = 5381;
@@ -18,6 +30,12 @@ unsigned long hash_fn(const char * str){
     return magic_number;
 }
 
+
+/*
+ * Create and initialize a hash table
+ *
+ * Returns: the pointer to the newly hashTable of size BUCKET_SIZE
+ */
 Node ** createHashTable(){
     //Allocate array of linked lists
     Node ** newTable = (Node **)malloc(BUCKET_SIZE * sizeof(Node *));
@@ -28,6 +46,16 @@ Node ** createHashTable(){
     return newTable;
 }
 
+
+/*
+ * Search for a Node in a hash table using a key
+ *
+ * Input:
+ *   hashTable- the pointer to the hash table
+ *   key      - the entity
+ *
+ * Returns: the pointer to the found Node. If not found, return NULL
+ */
 Node * findHashTable(Node ** hashTable, const char * key){
     if(hashTable == NULL) return NULL;
     //Calculate hash
@@ -36,6 +64,18 @@ Node * findHashTable(Node ** hashTable, const char * key){
     return findNode(hashTable[hash], key);
 }
 
+
+/*
+ * Insert a new node into a hash table. If a node with the same key already
+ * exists, the contents of that node is overwritten with the contents of 
+ * the new node
+ *
+ * Input:
+ *   hashTable- the pointer to the hash table
+ *   node     - the pointer to the Node that is going to be added
+ *
+ * Returns: the pointer to the updated hash table
+ */
 Node ** insertHashTable(Node ** hashTable, Node * node){
     if(hashTable == NULL) return NULL;
     if(node == NULL) return hashTable;
@@ -56,6 +96,16 @@ Node ** insertHashTable(Node ** hashTable, Node * node){
     return hashTable;
 }
 
+
+/*
+ * Delete a Node in the hash table that has the given key
+ *
+ * Input:
+ *   hashTable- the pointer to the hash table
+ *   key      - the entity
+ *
+ * Returns: the pointer to the updated hash table
+ */
 Node ** deleteHashTable(Node ** hashTable, const char * key){
     if(hashTable == NULL) return NULL;
     //Calculate hash
@@ -65,6 +115,15 @@ Node ** deleteHashTable(Node ** hashTable, const char * key){
     return hashTable;
 }
 
+
+/*
+ * Free a hash table
+ * 
+ * Input:
+ *   hashTable- the pointer to the hash table
+ *
+ * Returns: NULL
+ */
 Node ** clearHashTable(Node ** hashTable){
     if(hashTable == NULL) return NULL;
     //Loop through each slot

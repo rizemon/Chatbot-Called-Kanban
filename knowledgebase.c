@@ -4,6 +4,12 @@
 #include <string.h>
 #include "knowledgebase.h"
 
+
+/*
+ * Create and initialize a knowledge base
+ *
+ * Returns: the pointer to the newly allocated knowledge base
+ */
 KnowledgeBase * createKnowledgeBase(){
     //Allocate space for knowledge base
     KnowledgeBase * kb = (KnowledgeBase *)malloc(sizeof(KnowledgeBase));
@@ -15,6 +21,17 @@ KnowledgeBase * createKnowledgeBase(){
     return kb;
 }
 
+
+/*
+ * Search for a Node under the given intent in a knowledge base using an entity
+ *
+ * Input:
+ *   kb       - the pointer to the knowledge base
+ *   intent   - the intent (e.g "what", "where", "who")
+ *   entity   - the entity
+ *
+ * Returns: the pointer to the found Node. If not found, return NULL
+ */
 Node * searchKnowledgeBase(KnowledgeBase * kb, const char * intent, const char * entity){
     Node * found = NULL;
     //Search for node corresponding to entity
@@ -25,6 +42,17 @@ Node * searchKnowledgeBase(KnowledgeBase * kb, const char * intent, const char *
     return found;
 }
 
+
+/*
+ * Insert a new node into a knowledge base under the given intent
+ *
+ * Input:
+ *   kb       - the pointer to the knowledge base
+ *   intent   - the intent (e.g "what", "where", "who")
+ *   node     - the pointer to the Node that is going to be added
+ *
+ * Returns: the pointer to the found Node. If not found, return NULL
+ */
 KnowledgeBase * insertKnowledgeBase(KnowledgeBase * kb, const char * intent, Node * node){
     if(node==NULL) return kb;
     if(kb == NULL) return NULL;
@@ -36,6 +64,15 @@ KnowledgeBase * insertKnowledgeBase(KnowledgeBase * kb, const char * intent, Nod
     return kb;
 }
 
+
+/*
+ * Free a knowledge base
+ *
+ * Input:
+ *   kb       - the pointer to the knowledge base
+ *
+ * Returns: NULL
+ */
 KnowledgeBase * clearKnowledgeBase(KnowledgeBase * kb){
     if(kb == NULL) return NULL;
     //Free each dictionary
