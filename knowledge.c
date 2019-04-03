@@ -38,14 +38,19 @@ KnowledgeBase * kb = NULL;
  */
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
 	Node * found = NULL;
+	// If intent matches with the word "what", search what knowledge base for entity.
 	if(compare_token(intent, "what") == 0) found = searchKnowledgeBase(kb, "what", entity);
+	// Else if intent matches with the word "where", search where knowledge base for entity.
 	else if(compare_token(intent, "where") == 0) found = searchKnowledgeBase(kb, "where", entity);
+	// Else if intent matches with the word "who", search who knowledge base for entity.
 	else if(compare_token(intent, "who") == 0) found = searchKnowledgeBase(kb, "who", entity);
 	else return KB_INVALID;
 	
 	if(found == NULL){
+		// No response was found for the question. There is no such entity inside the corresponding knowledge base.
 		return KB_NOTFOUND;
 	}else{
+		// Response was found for the question. There is an entity inside the corresponding knowledge base together with it's response.
         snprintf(response, n, "%s", getNodeContent(found));
         return KB_OK;
 	}
@@ -69,41 +74,51 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
  *   KB_INVALID, if the intent is not a valid question word
  */
 int knowledge_put(const char *intent, const char *entity, const char *response) {
+	//If intent matches the word "what"
 	if(compare_token(intent, "what")==0){
 		Node * newNode = createNode(entity, response);
+		//No more memory for allocating a new node
 		if(newNode ==NULL){
 			return KB_NOMEM;
 		}
 		else
 		{
+			//Add a new node that contain entity and response into what knowledge base. 
 			kb = insertKnowledgeBase(kb , "what", createNode(entity,response));
 			return KB_OK;
 		}
 		
 	}
+	//Else if intent matches the word "where"
 	else if (compare_token(intent, "where") ==0){
 		Node * newNode = createNode(entity, response);
+		//No more memory for allocating a new node
 		if(newNode ==NULL){
 			return KB_NOMEM;
 		}
 		else
 		{
+			//Add a new node that contain entity and response into where knowledge base. 
 			kb = insertKnowledgeBase(kb , "where", createNode(entity,response));
 			return KB_OK;
 		}
 	}
-	else if (compare_token(intent, "who")== 0){	
+	//Else if intent matches the word "who"
+	else if (compare_token(intent, "who")== 0){
 		Node * newNode = createNode(entity, response);
+		//No more memory for allocating a new node
 		if(newNode ==NULL){
 			return KB_NOMEM;
 		}
 		else
 		{
+			//Add a new node that contain entity and response into who knowledge base. 
 			kb = insertKnowledgeBase(kb , "who", createNode(entity,response));
 			return KB_OK;
 		}
 	}
 	else{
+		//Else if intent was not "what" or "who" or "where", return KB_INVALID.
 		return KB_INVALID;
 	}
 }
