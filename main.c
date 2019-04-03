@@ -9,10 +9,8 @@
 /*
  * Changes made to main.c:
  *
- * int main(): Lines 60-62
- * void prompt_user(): Lines 149-152
- * Ctrl-F and search for [ADDED] to jump to the modified portions
- * 
+ * int main(): Line 61
+ * void prompt_user(): Line 151
  */
 
 

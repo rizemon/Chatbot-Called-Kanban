@@ -11,6 +11,14 @@
  *
  * You may add helper functions as necessary.
  */
+
+/*
+ * Changes made to knowledge.c:
+ *
+ * int startWith()
+ * const char * findIntent()
+ * void splitEntityResponse()
+ */
  
 #include <stdlib.h>
 #include <stdio.h>

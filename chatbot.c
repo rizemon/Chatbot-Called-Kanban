@@ -39,6 +39,16 @@
  * chatbot_username(), respectively. The main loop will print the strings
  * returned by these functions at the start of each line.
  */
+
+/*
+ * Changes made to chatbot.c:
+ *
+ * void smalltalk_hashtable()
+ * void prompt_user()
+ * char * trim()
+ * int compare_ignorelist()
+ * void getEntity()
+ */
  
 #include <stdio.h>
 #include <string.h>
@@ -436,14 +446,15 @@ int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
     
 }
 
+
 /*
- * Removes trailing and leading whitespaces from a char array
+ * Removes trailing and leading whitespaces from a given string
  *
  * Input:
- *  *str - The string 
+ *  inputStr - the given string
  *
  * Returns:
- *  The String with trailing and leading whitespaces removed
+ *  the updated string with trailing and leading whitespaces removed
  */
 char *trim(char *inputStr)
 {
@@ -466,23 +477,55 @@ char *trim(char *inputStr)
     return inputStr;
 }
 
+
+/*
+ * Insensitively checks whether a word is inside a list of ignored words (e.g is, are, from)
+ *
+ * Input:
+ *  word           - the given word
+ *  ignorelist     - list of ignored words
+ *  ignorelistsize - size of list of ignored words
+ *
+ * Returns:
+ *  1, if word is inside of the ignorelist
+ *  0, if word is not inside of the ignorelist
+ */
 int compare_ignorelist(char * word, char * ignorelist[], int ignorelistsize){
+    // Loop through each word in the ignore list
     for(int i = 0; i < ignorelistsize; i++ ){
+        // Insensitively check
         if(compare_token(word, ignorelist[i]) == 0){
+            // Return true
             return 1;
         }
     }
+    // Return false
     return 0;
 }
 
 
+/*
+ * Extract the entity portion from the user's input
+ *
+ * Input:
+ *  inc            - the number of words in the question
+ *  inv            - an array of pointers to each word in the question
+ *  ignorelist     - list of ignored words
+ *  ignorelistsize - size of list of ignored words
+ *  entity         - buffer to receive the extracted entity
+ *  removed        - buffer to receive the ignored word
+ */
 void getEntity(int inc, char *inv[], char * ignorelist[], int ignorelistsize, char entity[], char removed[]){
-	int entitylen = 0;
+	// Index to insert the next word
+    int entitylen = 0;
 
+    // Loop through each word
 	for(int i = 1; i<inc; i++){
+        // For the first word
 		if(i == 1){
+            // Check if first word is inside in the ignorelist
             if(compare_ignorelist(inv[i], ignorelist, ignorelistsize)){
-                //Store removed word in between spaces
+                //Store ignored word in between spaces
 				snprintf(removed, MAX_ENTITY, " %s ", inv[i]);
 				//Initialize entity to blank
 				entitylen += snprintf(entity+entitylen, MAX_ENTITY-entitylen, "%s", "");
