@@ -57,8 +57,10 @@
 #include "hashtable.h"
 #include "knowledgebase.h"
 
-/** Global Variable for hashtable containing all the smalltalk phrases*/
-/** Initialise smalltalks variable as NULL*/
+/*
+ * Global Variable for hashtable containing all the smalltalk phrases
+ * Initialise it to NULL
+ */
 Node ** smalltalks = NULL;
  
 /*
@@ -96,7 +98,7 @@ const char *chatbot_username() {
  *   1, if the chatbot should stop (i.e. it detected the EXIT intent)
  */
 int chatbot_main(int inc, char *inv[], char *response, int n) {
-    /** Checks if hashtable has been created before invoking create hashtable function */
+    /** Checks if the smalltalks hashtable has already been created before invoking create hashtable function */
     if (smalltalks == NULL){
         /** Creates smalltalk hash table*/
         smalltalk_hashtable();
@@ -364,21 +366,29 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
     return 0;
 }
 
-/** This function creates a hashtable filled with smalltalk nodes that store key value pairs of smalltalk intent and response respectively
-    This functions directly modifies the values of the global variable smalltalks so all other functions can reference directly reference the smalltalk hashtable
+/*
+ * Create a hashtable containing smalltalk nodes that store key-value pairs of smalltalk intent and response respectively
+ * The created hashtable is stored in the global variable smalltalks so that the hashtable can be freely referenced from all other functions
+ *
+ * Input:
+ *  smalltalks - the empty global hashtable variable (directly referenced)
  */
 void smalltalk_hashtable(){
-    /** Create smalltalk nodes containing key pair values of all the small talk phrases*/
+    
+    /** Create linked-list nodes containing key-values pairs of all smalltalk phrases */
     Node * smalltalk1 = createNode("bye", "goodbye");
     Node * smalltalk5 = createNode("goodbye", "bye");
     Node * smalltalk2 = createNode("hi", "hello");
     Node * smalltalk3 = createNode("hey", "hello");
     Node * smalltalk4 = createNode("sup", "whatsup");
     
-    /** Create a hashtable to store smalltalks*/
+    /*
+     * Create a hashtable to store smalltalks
+     * Store it inside the currently empty global hashtable variable
+     */
     smalltalks = createHashTable();
     
-    /** Insert nodes into smalltalks hashtable*/
+    /** Insert all newly created linked-list nodes into the smalltalks hashtable */
     smalltalks = insertHashTable(smalltalks, smalltalk1 );
     smalltalks = insertHashTable(smalltalks, smalltalk2 );
     smalltalks = insertHashTable(smalltalks, smalltalk3 );
@@ -389,7 +399,6 @@ void smalltalk_hashtable(){
 /*
  * Determine which an intent is smalltalk.
  *
- *
  * Input:
  *  intent - the intent
  *
@@ -398,8 +407,13 @@ void smalltalk_hashtable(){
  *  0, otherwise
  */
 int chatbot_is_smalltalk(const char *intent) {
-    /** If intent matches key inside linkedlist smalltalk, return 1, otherwise, return 0 */
+    
     if (findHashTable(smalltalks, intent) != NULL) {
+    /* Checks if intent matches any key inside smalltalk hashtable
+     *
+     * Input:
+     *  smalltalks - the global hashtable containing all key-pair values of smalltalk phrases
+     */
         return 1;
     }
     else {
@@ -420,20 +434,34 @@ int chatbot_is_smalltalk(const char *intent) {
  *   1, if the chatbot should stop chatting (e.g. the smalltalk was "goodbye" etc.)
  */
 int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
+    /*
+     * Input:
+     *  intent - the first word of the question
+     *  smalltalk_response - the corresponding response to the given intent
+     *  end_phrases - array of smalltalk phrases meant to end the program
+     */
     char *intent = inv[0];
     char *smalltalk_response = findHashTable(smalltalks, intent)->content;
     char * end_phrases[] = {"bye", "goodbye"};
     int index, str_cmp, found= 0;
-    /* Check if intent is any of the ending phrases */
+    /** Check if intent is any of the ending phrases */
     for(index = 0; index < sizeof(end_phrases) / sizeof(char *); index++)
     {
             str_cmp = strcmp(intent, end_phrases[index]);
             if (str_cmp == 0) {
-                /** smalltalk matches end_phrases */
+                /** if smalltalk intent matches end_phrases, increment found by 1*/
                 found += 1;
             }
     }
-    /** If no matching end_phrases found, print smalltalk_response and return 0 to continue catting*/
+    /*
+     * Checks if there were any matching end_phrases found,
+     * if there were, print the corresponding smalltalk_response to buffer and continue chatting,
+     * otherwise, print the corresponding smalltalk_response to buffer and stop chatting
+     *
+     * Returns:
+     *  0, if there were matching end_phrases found
+     *  1, otherwise
+     */
     if (found == 0) {
         snprintf(response, n, "%s",smalltalk_response);
         return 0;
