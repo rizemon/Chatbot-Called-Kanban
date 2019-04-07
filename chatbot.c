@@ -342,7 +342,6 @@ int chatbot_is_save(const char *intent) {
  */
 int chatbot_do_save(int inc, char *inv[], char *response, int n) {
     
-    int no_of_responses_read = 0;
     char filename[MAX_ENTITY];
     char removed[MAX_ENTITY];
     char * ignorelist[] = {"as","to"};
