@@ -4,6 +4,20 @@
  * This file contains the definitions and function prototypes for all of
  * features of the ICT1002 chatbot.
  */
+
+/*
+ * Changes made to chat1002.h:
+ *
+ * void smalltalk_hashtable()
+ * void prompt_user()
+ * char * trim()
+ * int compare_ignorelist()
+ * void getEntity()
+ * void knowledge_init()
+ * int startWith()
+ * const char * findIntent()
+ * void splitEntityResponse()
+ */
  
 #ifndef _CHAT1002_H
 #define _CHAT1002_H
@@ -47,7 +61,6 @@ int chatbot_is_reset(const char *intent);
 int chatbot_do_reset(int inc, char *inv[], char *response, int n);
 int chatbot_is_save(const char *intent);
 int chatbot_do_save(int inc, char *inv[], char *response, int n);
-void smalltalk_hashtable(void);
 int chatbot_is_smalltalk(const char *intent);
 int chatbot_do_smalltalk(int inc, char *inv[], char *resonse, int n);
 
@@ -60,6 +73,7 @@ void knowledge_write(FILE *f);
 
 void knowledge_init();
 
+void smalltalk_hashtable(void);
 char * trim();
 int startWith(char buffer[], char prefix[]);
 const char * findIntent(char buffer[]);

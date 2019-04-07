@@ -15,6 +15,7 @@
 /*
  * Changes made to knowledge.c:
  *
+ * void knowledge_init()
  * int startWith()
  * const char * findIntent()
  * void splitEntityResponse()
