@@ -216,7 +216,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
         /** Closes the file */
         fclose(file);
         /** Prints no of responses read onto the buffer*/
-        snprintf(response, n, "Read %d responses from %s", no_of_responses_read,filename);
+        snprintf(response, n, "Read %d responses from %s.", no_of_responses_read,filename);
     }
     /** Always return 0 to continue chatting after loading knowledge */
     return 0;
@@ -266,7 +266,7 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
         char *filter = trim(answer);
         if(strlen(filter) != 0){
             knowledge_put(intent,entity, filter);
-            snprintf(response, n, "Thank you"); 
+            snprintf(response, n, "Thank you."); 
         }else{
             snprintf(response, n, ":-("); 
         }
@@ -375,11 +375,13 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 void smalltalk_hashtable(){
     
     /** Create linked-list nodes containing key-values pairs of all smalltalk phrases */
-    Node * smalltalk1 = createNode("bye", "goodbye");
-    Node * smalltalk5 = createNode("goodbye", "bye");
-    Node * smalltalk2 = createNode("hi", "hello");
-    Node * smalltalk3 = createNode("hey", "hello");
-    Node * smalltalk4 = createNode("sup", "whatsup");
+    Node * smalltalk1 = createNode("bye", "Goodbye!");
+    Node * smalltalk5 = createNode("goodbye", "Goodbye!");
+    Node * smalltalk6 = createNode("quit", "Goodbye!");
+    Node * smalltalk2 = createNode("hi", "Hello.");
+    Node * smalltalk3 = createNode("hey", "Hello.");
+    Node * smalltalk7 = createNode("hello", "Hello.");
+    Node * smalltalk4 = createNode("sup", "Whatsup! :)");
     
     /*
      * Create a hashtable to store smalltalks
@@ -393,6 +395,8 @@ void smalltalk_hashtable(){
     smalltalks = insertHashTable(smalltalks, smalltalk3 );
     smalltalks = insertHashTable(smalltalks, smalltalk4 );
     smalltalks = insertHashTable(smalltalks, smalltalk5 );
+    smalltalks = insertHashTable(smalltalks, smalltalk6 );
+    smalltalks = insertHashTable(smalltalks, smalltalk7 );
 }
  
 /*
@@ -441,7 +445,7 @@ int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
      */
     char *intent = inv[0];
     char *smalltalk_response = findHashTable(smalltalks, intent)->content;
-    char * end_phrases[] = {"bye", "goodbye"};
+    char * end_phrases[] = {"bye", "goodbye", "quit"};
     int index, str_cmp, found= 0;
     /** Check if intent is any of the ending phrases */
     for(index = 0; index < sizeof(end_phrases) / sizeof(char *); index++)
